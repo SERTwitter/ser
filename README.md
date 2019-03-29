@@ -20,11 +20,13 @@ remotes::install_github("SERTwitter/ser")
 ## What does ser currently do?
 
 ser handles automatic daily tweeting to supplement the work done by
-content leads and daily email summaries of Twitter activity on the SER
-account.
+content leads, daily email summaries of Twitter activity on the SER
+account, and posts tweets related to the annual meeting during the three
+months prior.
 
   - `action_auto_tweet()`
   - `action_email_summary()`
+  - `action_meeting_tweet()`
 
 ser also provides functions to email summaries of errors that may occur
 in code while running automatically on the server. `action_safely()`

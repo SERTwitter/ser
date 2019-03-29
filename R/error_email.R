@@ -46,7 +46,7 @@ build_error_html <- function(.error) {
 #' @export
 #'
 #' @rdname errors
-email_on_error <- function(.e, gmail_secret_file = "client_id.json", recipient = email_to()) {
+email_on_error <- function(.e, recipient = email_to()) {
   gmailr::gmail_auth("compose", id = gmail_id(), secret = gmail_secret())
 
   email_msg <- build_error_html(.e)
