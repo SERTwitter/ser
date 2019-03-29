@@ -111,9 +111,9 @@ action_auto_tweet <- function(twitter_token = ser_token, google_drive_auth = "tt
   if (all(tweet_queue$tweeted)) tweet_queue$tweeted <- FALSE
 
   # update tweet and retweet queues
-  googledrive::write_csv(tweet_queue, "tweet_queue.csv")
+  readr::write_csv(tweet_queue, "tweet_queue.csv")
   googledrive::drive_update(tweet_csv_id, "tweet_queue.csv")
-  googledrive::write_csv(retweet_queue, "retweet_queue.csv")
+  readr::write_csv(retweet_queue, "retweet_queue.csv")
   googledrive::drive_update(retweet_csv_id, "retweet_queue.csv")
 
   # return updated tweet queue
