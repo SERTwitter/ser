@@ -2,9 +2,11 @@
 
 #' @export
 #' @rdname errors
-on_error_email_to <- function(recipient) {
+on_error_email_to <- function(recipient, gmail_id, gmail_secret) {
   .email_to$email <- recipient
-  invisible(recipient)
+  .email_to$gmail_id <- gmail_id
+  .email_to$gmail_secret <- gmail_secret
+  invisible(c(recipient, gmail_id, gmail_secret))
 }
 
 #' @export
@@ -12,6 +14,19 @@ on_error_email_to <- function(recipient) {
 email_to <- function() {
   .email_to$email
 }
+
+#' @export
+#' @rdname errors
+gmail_id <- function() {
+  .email_to$gmail_id
+}
+
+#' @export
+#' @rdname errors
+gmail_secret <- function() {
+  .email_to$gmail_secret
+}
+
 
 build_error_html <- function(.error) {
   paste("<h2>Error in SER code:", Sys.time(), "</h2> \n", .error)
@@ -32,7 +47,7 @@ build_error_html <- function(.error) {
 #'
 #' @rdname errors
 email_on_error <- function(.e, gmail_secret_file = "client_id.json", recipient = email_to()) {
-  gmailr::use_secret_file(gmail_secret_file)
+  gmailr::gmail_auth("compose", id = gmail_id(), secret = gmail_secret())
 
   email_msg <- build_error_html(.e)
 

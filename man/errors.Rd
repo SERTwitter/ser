@@ -3,13 +3,19 @@
 \name{on_error_email_to}
 \alias{on_error_email_to}
 \alias{email_to}
+\alias{gmail_id}
+\alias{gmail_secret}
 \alias{email_on_error}
 \alias{action_safely}
 \title{Email errors in code}
 \usage{
-on_error_email_to(recipient)
+on_error_email_to(recipient, gmail_id, gmail_secret)
 
 email_to()
+
+gmail_id()
+
+gmail_secret()
 
 email_on_error(.e, gmail_secret_file = "client_id.json",
   recipient = email_to())
