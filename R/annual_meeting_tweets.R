@@ -63,13 +63,13 @@ action_meeting_tweet <- function(period_start = "2019-03-01", period_end = "2019
   # post more often when closer to the meeting but not on weekends
   this_month <- lubridate::month(Sys.Date(), label = TRUE)
   last_6_weeks <- this_month %in% c("May", "Jun") & Sys.Date() < period_end
-  five_days <- c("Mon", "Tue", "Wed", "Thu", "Fri")
-  three_days <- five_days[c(1, 3, 5)]
-  tweet_days <- ifelse(last_6_weeks, five_days, three_days)
+  tweet_days <- c("Mon", "Tue", "Wed", "Thu", "Fri")
+  if (!last_6_weeks) tweet_days <- tweet_days[c(1, 3, 5)]
   todays_date <- lubridate::wday(Sys.Date(), label = TRUE) %>%
     as.character()
+
+  # post tweet and return updated data
   if (todays_date %in% tweet_days) {
-    # post tweet and return updated data
     meeting_tweet_queue <- post_meeting_tweet(meeting_tweet_queue)
   }
 

@@ -17,8 +17,7 @@ gmail_id()
 
 gmail_secret()
 
-email_on_error(.e, gmail_secret_file = "client_id.json",
-  recipient = email_to())
+email_on_error(.e, recipient = email_to())
 
 action_safely(.f)
 }
