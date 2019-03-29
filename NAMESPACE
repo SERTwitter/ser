@@ -3,4 +3,8 @@
 export("%>%")
 export(action_auto_tweet)
 export(action_email_summary)
+export(action_safely)
+export(email_on_error)
+export(email_to)
+export(on_error_email_to)
 importFrom(magrittr,"%>%")
