@@ -4,11 +4,11 @@
 \alias{action_email_summary}
 \title{Email Daily Summary of SER Tweets}
 \usage{
-action_email_summary(gmail_secret_file = "client_id.json",
-  twitter_token = ser_token, recipients)
+action_email_summary(gmail_id, gmail_secret, twitter_token = ser_token,
+  recipients)
 }
 \arguments{
-\item{gmail_secret_file}{the name of the gmail authorization file}
+\item{gmail_id, gmail_secret}{gmail authorization}
 
 \item{twitter_token}{an rtweet token for the SER app}
 
