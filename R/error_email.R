@@ -46,8 +46,9 @@ build_error_html <- function(.error) {
 #' @export
 #'
 #' @rdname errors
-email_on_error <- function(.e, recipient = email_to()) {
-  gmailr::gmail_auth("compose", id = gmail_id(), secret = gmail_secret())
+email_on_error <- function(.e, recipient = email_to(), path) {
+ # gmailr::gmail_auth("compose", id = gmail_id(), secret = gmail_secret())
+ gmailr::gm_auth(path = path, scopes = "compose")
 
   email_msg <- build_error_html(.e)
 

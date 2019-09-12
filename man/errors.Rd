@@ -17,7 +17,7 @@ gmail_id()
 
 gmail_secret()
 
-email_on_error(.e, recipient = email_to())
+email_on_error(.e, recipient = email_to(), path)
 
 action_safely(.f)
 }

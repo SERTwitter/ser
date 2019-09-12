@@ -61,8 +61,10 @@ blackout_tweet <- function(tweet_data = tweet_queue) {
 #' @export
 action_auto_tweet <- function(twitter_token = ser_token, google_drive_auth = "ttt.rds") {
   # Authorize Google Drive for cron job
-  ttt <- googledrive::drive_auth(google_drive_auth)
-  if (!is.null(google_drive_auth)) saveRDS(ttt, google_drive_auth)
+  # previous code
+  # ttt <- googledrive::drive_auth(google_drive_auth)
+  # if (!is.null(google_drive_auth)) saveRDS(ttt, google_drive_auth)
+  googledrive::drive_auth(service_token = google_drive_auth)
 
   # download the existing tweet queue from google drive
   tweet_csv_id <- googledrive::drive_find(pattern = "^tweet_queue", type = "spreadsheet") %>%
