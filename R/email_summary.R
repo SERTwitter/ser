@@ -35,8 +35,9 @@ get_ny_tz <- function() {
 #'
 #' @return the email to be sent, a character vector
 #' @export
-action_email_summary <- function(gmail_id, gmail_secret, twitter_token = ser_token, recipients) {
-  gmailr::gmail_auth("compose", id = gmail_id, secret = gmail_secret)
+action_email_summary <- function(recipients, twitter_token = ser_token) {
+  gmailr::gm_auth_configure(gmail_id(), gmail_secret())
+  gmailr::gm_auth(email = gmail_email(), scopes = "compose", token = gmailr::gm_oauth_app())
 
   yesterday <- lubridate::today() - lubridate::days(1)
 

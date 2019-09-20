@@ -45,17 +45,15 @@ build_error_html <- function(.error) {
 #' `on_error_email_to()` and retrieve it with `email_to()`.
 #'
 #' @param .e the error message
-#' @param gmail_secret_file the name of the gmail authorization file
 #' @param recipient an email address.
 #'
 #' @return a character vector containing the error email
 #' @export
 #'
 #' @rdname errors
-email_on_error <- function(.e, recipient = email_to(), email = gmail_email()) {
- # gmailr::gmail_auth("compose", id = gmail_id(), secret = gmail_secret())
+email_on_error <- function(.e, recipient = email_to()) {
  gmailr::gm_auth_configure(gmail_id(), gmail_secret())
- gmailr::gm_auth(email = email, scopes = "compose", token = gmailr::gm_oauth_app())
+ gmailr::gm_auth(email = gmail_email(), scopes = "compose", token = gmailr::gm_oauth_app())
 
   email_msg <- build_error_html(.e)
 
