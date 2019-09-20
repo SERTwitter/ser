@@ -5,11 +5,12 @@
 \alias{email_to}
 \alias{gmail_id}
 \alias{gmail_secret}
+\alias{gmail_email}
 \alias{email_on_error}
 \alias{action_safely}
 \title{Email errors in code}
 \usage{
-on_error_email_to(recipient, gmail_id, gmail_secret)
+on_error_email_to(recipient, gmail_id, gmail_secret, gmail_email)
 
 email_to()
 
@@ -17,7 +18,9 @@ gmail_id()
 
 gmail_secret()
 
-email_on_error(.e, recipient = email_to(), path)
+gmail_email()
+
+email_on_error(.e, recipient = email_to())
 
 action_safely(.f)
 }
@@ -25,8 +28,6 @@ action_safely(.f)
 \item{recipient}{an email address.}
 
 \item{.e}{the error message}
-
-\item{gmail_secret_file}{the name of the gmail authorization file}
 }
 \value{
 a character vector containing the error email

@@ -4,15 +4,14 @@
 \alias{action_email_summary}
 \title{Email Daily Summary of SER Tweets}
 \usage{
-action_email_summary(gmail_id, gmail_secret, twitter_token = ser_token,
-  recipients)
+action_email_summary(recipients, twitter_token = ser_token)
 }
 \arguments{
-\item{gmail_id, gmail_secret}{gmail authorization}
+\item{recipients}{a vector of email addresses to blind copy the email to}
 
 \item{twitter_token}{an rtweet token for the SER app}
 
-\item{recipients}{a vector of email addresses to blind copy the email to}
+\item{gmail_id, gmail_secret}{gmail authorization}
 }
 \value{
 the email to be sent, a character vector
