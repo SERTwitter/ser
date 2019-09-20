@@ -64,7 +64,7 @@ action_auto_tweet <- function(twitter_token = ser_token, google_drive_auth = "tt
   # previous code
   # ttt <- googledrive::drive_auth(google_drive_auth)
   # if (!is.null(google_drive_auth)) saveRDS(ttt, google_drive_auth)
-  googledrive::drive_auth(service_token = google_drive_auth)
+  googledrive::drive_auth(path = google_drive_auth)
 
   # download the existing tweet queue from google drive
   tweet_csv_id <- googledrive::drive_find(pattern = "^tweet_queue", type = "spreadsheet") %>%
