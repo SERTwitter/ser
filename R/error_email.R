@@ -2,12 +2,12 @@
 
 #' @export
 #' @rdname errors
-on_error_email_to <- function(recipient, gmail_id, gmail_secret, gmail_path) {
+on_error_email_to <- function(recipient, gmail_id, gmail_secret, gmail_email) {
   .email_to$email <- recipient
   .email_to$gmail_id <- gmail_id
   .email_to$gmail_secret <- gmail_secret
-  .email_to$gmail_path <- gmail_path
-  invisible(c(recipient, gmail_id, gmail_secret, gmail_path))
+  .email_to$gmail_email <- gmail_email
+  invisible(c(recipient, gmail_id, gmail_secret, gmail_email))
 }
 
 #' @export
@@ -29,8 +29,8 @@ gmail_secret <- function() {
 }
 #' @export
 #' @rdname errors
-gmail_path <- function() {
-  .email_to$gmail_path
+gmail_email <- function() {
+  .email_to$gmail_email
 }
 
 
@@ -52,9 +52,9 @@ build_error_html <- function(.error) {
 #' @export
 #'
 #' @rdname errors
-email_on_error <- function(.e, recipient = email_to(), path = gmail_path()) {
+email_on_error <- function(.e, recipient = email_to(), email = gmail_email()) {
  # gmailr::gmail_auth("compose", id = gmail_id(), secret = gmail_secret())
- gmailr::gm_auth(path = path, scopes = "compose")
+ gmailr::gm_auth(email = email, scopes = "compose", token = gmailr::gm_oauth_app())
 
   email_msg <- build_error_html(.e)
 
