@@ -5,7 +5,7 @@
 \title{Post SER tweets from the tweet queue Monday through Friday}
 \usage{
 action_auto_tweet(twitter_token = ser_token,
-  google_drive_auth = "ttt.rds")
+  google_drive_auth = drive_auth_token())
 }
 \arguments{
 \item{twitter_token}{an rtweet token for the SER app}

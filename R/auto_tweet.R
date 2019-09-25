@@ -59,7 +59,7 @@ blackout_tweet <- function(tweet_data = tweet_queue) {
 #' @return a data frame containing the updated tweet queue
 #'
 #' @export
-action_auto_tweet <- function(twitter_token = ser_token, google_drive_auth = "ttt.rds") {
+action_auto_tweet <- function(twitter_token = ser_token, google_drive_auth = drive_auth_token()) {
   # Authorize Google Drive for cron job
   # previous code
   # ttt <- googledrive::drive_auth(google_drive_auth)
@@ -120,4 +120,25 @@ action_auto_tweet <- function(twitter_token = ser_token, google_drive_auth = "tt
 
   # return updated tweet queue
   invisible(tweet_queue)
+}
+
+#' Get tokens for auto-tweet functionality
+#'
+#' @return A Twitter or Google Drive token
+#' @export
+drive_auth_token <- function() {
+  Sys.getenv("DRIVE_AUTH_TOKEN_PATH")
+}
+
+#' @export
+#' @rdname drive_auth_token
+ser_token <- function() {
+  rtweet::create_token(
+    "tweet_tokens_ser",
+    consumer_key = Sys.getenv("SER_CONSUMER_KEY"),
+    consumer_secret = Sys.getenv("SER_CONSUMER_SECRET"),
+    access_token = Sys.getenv("SER_ACCESS_TOKEN"),
+    access_secret = Sys.getenv("SER_ACCESS_SECRET"),
+    set_renv = FALSE
+  )
 }
