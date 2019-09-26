@@ -12,7 +12,7 @@ source_ser <- function(name) {
   name <- paste0(name, ".R")
   file <- file.path("scripts", name)
   path <- system.file(file, package = "ser", mustWork = TRUE)
-  sys.source(path)
+  sys.source(path, envir = parent.frame())
 }
 
 #' @export
