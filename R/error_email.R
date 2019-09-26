@@ -2,12 +2,9 @@
 
 #' @export
 #' @rdname errors
-on_error_email_to <- function(recipient, gmail_id, gmail_secret, gmail_email) {
+on_error_email_to <- function(recipient) {
   .email_to$email <- recipient
-  .email_to$gmail_id <- gmail_id
-  .email_to$gmail_secret <- gmail_secret
-  .email_to$gmail_email <- gmail_email
-  invisible(c(recipient, gmail_id, gmail_secret, gmail_email))
+  invisible(recipient)
 }
 
 #' @export
@@ -19,18 +16,18 @@ email_to <- function() {
 #' @export
 #' @rdname errors
 gmail_id <- function() {
-  .email_to$gmail_id
+  Sys.getenv("GMAIL_ID")
 }
 
 #' @export
 #' @rdname errors
 gmail_secret <- function() {
-  .email_to$gmail_secret
+  Sys.getenv("GMAIL_SECRET")
 }
 #' @export
 #' @rdname errors
 gmail_email <- function() {
-  .email_to$gmail_email
+  gmail("ser.twitteracct")
 }
 
 
@@ -46,14 +43,15 @@ build_error_html <- function(.error) {
 #'
 #' @param .e the error message
 #' @param recipient an email address.
+#' @param .f a function to wrap in the email error catching function
 #'
 #' @return a character vector containing the error email
 #' @export
 #'
 #' @rdname errors
 email_on_error <- function(.e, recipient = email_to()) {
- gmailr::gm_auth_configure(gmail_id(), gmail_secret())
- gmailr::gm_auth(email = gmail_email(), scopes = "compose", token = gmailr::gm_oauth_app())
+  gmailr::gm_auth_configure(gmail_id(), gmail_secret())
+  gmailr::gm_auth(email = gmail_email(), scopes = "compose", token = gmailr::gm_oauth_app())
 
   email_msg <- build_error_html(.e)
 

@@ -10,7 +10,7 @@
 \alias{action_safely}
 \title{Email errors in code}
 \usage{
-on_error_email_to(recipient, gmail_id, gmail_secret, gmail_email)
+on_error_email_to(recipient)
 
 email_to()
 
@@ -28,6 +28,8 @@ action_safely(.f)
 \item{recipient}{an email address.}
 
 \item{.e}{the error message}
+
+\item{.f}{a function to wrap in the email error catching function}
 }
 \value{
 a character vector containing the error email

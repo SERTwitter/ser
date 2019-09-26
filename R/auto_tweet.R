@@ -18,7 +18,7 @@ update_retweets <- function(twitter_token = ser_token) {
   ser_tweets %>%
     dplyr::arrange(desc(retweet_count)) %>%
     dplyr::filter(!is_retweet, !stringr::str_detect(text, stringr::regex("SERPlaylist|playlist|EpiSummerReads", ignore_case = TRUE))) %>%
-    head(8) %>%
+    utils::head(8) %>%
     dplyr::select(text, status_id, favorite_count, retweet_count) %>%
     dplyr::mutate(tweeted = FALSE)
 }

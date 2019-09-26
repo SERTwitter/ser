@@ -29,7 +29,6 @@ get_ny_tz <- function() {
 #' character vector containing the email message that it sent. Requires Gmail
 #' and Twitter authorization.
 #'
-#' @param gmail_id,gmail_secret gmail authorization
 #' @param twitter_token an rtweet token for the SER app
 #' @param recipients a vector of email addresses to blind copy the email to
 #'

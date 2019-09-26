@@ -1,27 +1,31 @@
 Package: ser
 Title: Data Science Tools for SER
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person(given = "Malcolm",
            family = "Barrett",
            role = c("aut", "cre"),
            email = "malcolmbarrett@gmail.com")
-Description: A set of tools to use within the Society for Epidemiologic Research Twitter Analytics 
-  Committee. These are primarily functions to run automated scripts, including posting tweets and 
-  summarizing account activity over email.
+Description: A set of tools to use within the Society for
+    Epidemiologic Research Twitter Analytics Committee. These are
+    primarily functions to run automated scripts, including posting tweets
+    and summarizing account activity over email.
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
 Imports: 
-    rtweet,
+    dplyr,
+    fs,
+    glue,
     gmailr,
+    googledrive,
     gt,
     lubridate,
-    dplyr,
-    stringr,
     magrittr,
     readr,
-    googledrive,
-    glue
+    rstudioapi,
+    rtweet,
+    stringr,
+    usethis (>= 1.5.0)
+Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
