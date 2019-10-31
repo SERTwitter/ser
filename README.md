@@ -46,3 +46,37 @@ safe_auto_error <- action_safely(auto_error)
 # sends an email to stored email address with error message
 safe_auto_error()
 ```
+
+## Getting access to the Twitter API
+
+You’ll need access to the SER Twitter account. Log in and go to
+<https://developer.twitter.com/en/apps>. There, you will find four items
+you need: the consumer key, consumer secret, access token, and access
+secret. ser has a function called `ser_token()` that provides a way to
+access the SER tokens. To do so, you’ll need to put them in your
+.Renviron file. Use the usethis package to open it.
+
+``` r
+# if you need to install usethis
+# install.packages("usethis")
+
+# Open your .Renviron file
+usethis::edit_r_environ()
+```
+
+There, you’ll need to add the SER tokens. Here, I’ve put in fake digits.
+Replace them with the real tokens.
+
+``` r
+SER_CONSUMER_KEY=1i2345y6789a
+SER_CONSUMER_SECRET=12345d6789b
+SER_ACCESS_TOKEN=1g2345678c
+SER_ACCESS_SECRET=123r4567f89d
+```
+
+Save and restart. Many of the functions in rtweet have a `token`
+argument. Call `ser_token()` to gain access to the Twitter API:
+
+``` r
+rtweet::get_mentions(token = ser_token())
+```
