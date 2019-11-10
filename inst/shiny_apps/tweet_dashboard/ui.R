@@ -23,6 +23,15 @@ shinyUI(
                 infoBoxOutput("n_mentions"),
                 infoBoxOutput("most_liked"),
                 infoBoxOutput("most_retweeted")
+            ),
+            fluidRow(
+                box(),
+                box()
+            ),
+
+            fluidRow(
+                box(),
+                box()
             )
         )
     )
