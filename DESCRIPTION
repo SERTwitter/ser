@@ -23,6 +23,8 @@ Imports:
     readr,
     rstudioapi,
     rtweet,
+    shiny,
+    shinydashboard,
     stringr,
     usethis (>= 1.5.0)
 Encoding: UTF-8
