@@ -21,7 +21,7 @@ is_tweet_length <- function(.x, n = 280) {
 
 assignInNamespace("is_tweet_length", is_tweet_length, ns = "rtweet")
 
-on_error_email_to(gmail("malcolmbarrett"))
+on_error_email_to(c(gmail("malcolmbarrett"), email("jason_gantenberg", "brown.edu")))
 safe_action_auto_tweet <- action_safely(action_auto_tweet)
 safe_action_auto_tweet()
 
