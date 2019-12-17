@@ -50,8 +50,8 @@ build_error_html <- function(.error) {
 #'
 #' @rdname errors
 email_on_error <- function(.e, recipient = email_to()) {
-  gmailr::gm_auth_configure(gmail_id(), gmail_secret())
-  gmailr::gm_auth(email = gmail_email(), scopes = "compose", token = gmailr::gm_oauth_app())
+  gmailr::gm_auth_configure()
+  gmailr::gm_auth(email = gmail_email(), scopes = "compose")
 
   email_msg <- build_error_html(.e)
 
