@@ -133,8 +133,10 @@ drive_auth_token <- function() {
 #' @export
 #' @rdname drive_auth_token
 ser_token <- function() {
+  app_name <- Sys.getenv("TWITTER_APP_NAME")
+  if (app_name == "") app_name <- "tweet_tokens_ser"
   rtweet::create_token(
-    "tweet_tokens_ser",
+    app_name,
     consumer_key = Sys.getenv("SER_CONSUMER_KEY"),
     consumer_secret = Sys.getenv("SER_CONSUMER_SECRET"),
     access_token = Sys.getenv("SER_ACCESS_TOKEN"),
