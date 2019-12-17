@@ -50,8 +50,12 @@ build_error_html <- function(.error) {
 #'
 #' @rdname errors
 email_on_error <- function(.e, recipient = email_to()) {
+  googledrive::drive_auth(path = drive_auth_token())
+  googledrive::drive_download(as_id("1SuxbQzRfchY9IyUDkkeyqvrvHaWhlsk7"), overwrite = TRUE)
+  gm_token <- readr::read_rds(".secret")
   gmailr::gm_auth_configure()
-  gmailr::gm_auth(email = gmail_email(), scopes = "compose")
+  gmailr::gm_auth(email = gmail_email(), token = gm_token)
+  googledrive::drive_update(as_id("1SuxbQzRfchY9IyUDkkeyqvrvHaWhlsk7"), ".secret")
 
   email_msg <- build_error_html(.e)
 
