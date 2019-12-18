@@ -1,4 +1,4 @@
-name: Deploy SER script: `{{{script_name}}}.R`
+name: 'Deploy SER script: `{{{script_name}}}.R`'
 'on':
   schedule:
     - cron:  {{{cron}}}
