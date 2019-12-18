@@ -1,0 +1,26 @@
+name: Deploy SER script: `{{{script_name}}}.R`
+'on':
+  schedule:
+    - cron:  {{{cron}}}
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+      - name: Install Package Dependencies
+        run: |-
+          Rscript -e "install.packages('remotes', repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+          Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+      - name: Deploy script: `{{{script_name}}}.R`
+        env:
+          DRIVE_AUTH_TOKEN_PATH: ${{ secrets.DRIVE_AUTH_TOKEN_PATH }}
+          GMAILR_APP: ${{ secrets.GMAILR_APP }}
+          SER_ACCESS_SECRET: ${{ secrets.SER_ACCESS_SECRET }}
+          SER_ACCESS_TOKEN: ${{ secrets.SER_ACCESS_TOKEN }}
+          SER_CONSUMER_KEY: ${{ secrets.SER_CONSUMER_KEY }}
+          SER_CONSUMER_SECRET: ${{ secrets.SER_CONSUMER_SECRET }}
+        run: |-
+          Rscript -e "library(ser); source_ser('{{{script_name}}}')"
+    container: rocker/verse:latest
