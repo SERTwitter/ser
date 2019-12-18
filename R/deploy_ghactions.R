@@ -13,7 +13,7 @@ deploy_ghactions <- function(script_name, cron = "30 16 * * *") {
   if (!script_name %in% scripts_ls()) stop("script not found. Please add it to the ser package in `inst/scripts`.", call. = FALSE)
   usethis::use_template("DESCRIPTION", package = "ser", data = list(script_name = script_name))
   if (!fs::dir_exists(".github/workflows/")) fs::dir_create(".github/workflows/")
-  usethis::use_template("main.yml", save_as = ".github/workflows/main.yml", package = "ser", data = list(script_name = script_name, cron = cron))
+  usethis::use_template("main.yml", save_as = ".github/workflows/main.yml", package = "ser", data = list(script_name = script_name, cron = glue::glue("\'{cron}\'")))
   usethis::ui_info("Setting cron job to {cron}. Change the `cron` argument in {usethis::ui_field('.github/workflows/main.yml')} to run at a different time.")
   usethis::ui_todo("Add the following secrets to the deployment GitHub repository: \\
                    {usethis::ui_code('DRIVE_AUTH_TOKEN_PATH')},  \\
