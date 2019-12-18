@@ -1,6 +1,5 @@
 library(ser)
 
-setwd(file.path("/home", "rstudio", "Dropbox", "rstudio_server", "ser_twitter"))
 # if deauthorized on google drive:
 # googledrive::drive_auth(use_oob = TRUE)
 options(gargle_oob_default = TRUE)
