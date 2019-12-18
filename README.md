@@ -47,6 +47,22 @@ safe_auto_error <- action_safely(auto_error)
 safe_auto_error()
 ```
 
+## Adding and deploying scripts
+
+Add functions you need for your script in `R/`. Add the script that
+should be deployed to `inst/scripts`.
+
+We use GitHub Actions to deploy our scripts. Create a repository under
+the SERTwitter account. Inside of the repository, run
+`ser::deploy_ghactions()` with the name of the script to deploy. This
+will add a DESCRIPTION file and the YAML file you need to deploy to GH
+Actions
+
+``` r
+# do not include `.R` at the end of the name
+deploy_ghactions("script_name")
+```
+
 ## Getting access to the Twitter API
 
 You’ll need access to the SER Twitter account. Log in and go to
@@ -57,9 +73,6 @@ access the SER tokens. To do so, you’ll need to put them in your
 .Renviron file. Use the usethis package to open it.
 
 ``` r
-# if you need to install usethis
-# install.packages("usethis")
-
 # Open your .Renviron file
 usethis::edit_r_environ()
 ```
@@ -80,3 +93,9 @@ argument. Call `ser_token()` to gain access to the Twitter API:
 ``` r
 rtweet::get_mentions(token = ser_token())
 ```
+
+## Getting access to Google Drive and Gmail
+
+This is a bit more complicated and requires both API credentials and
+log-in authorization, meaning you’ll need access to the SER Twitter team
+email address. Contact Malcolm for more information.
