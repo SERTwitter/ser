@@ -25,9 +25,9 @@ Imports:
     rtweet,
     stringr,
     usethis (>= 1.5.0)
+Remotes: 
+    rstudio/gt
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.0
-Remotes:  
-    rstudio/gt
