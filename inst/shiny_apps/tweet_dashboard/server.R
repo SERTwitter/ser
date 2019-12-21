@@ -10,24 +10,160 @@
 library(shiny)
 library(shinydashboard)
 library(rtweet)
+library(ser)
+library(plotly)
+library(ggplot2)
+library(dplyr)
+library(forcats)
 
+# ser_mentions <- get_mentions(token = ser_token())
+# mentioners <- lookup_tweets(ser_mentions$status_id, token = ser_token())
+# ser_tweets <- get_timeline("societyforepi", n = 1e4, token = ser_token())
+
+theme_minimal_v <- function() {
+    list(
+        theme_minimal(14),
+        theme(
+            panel.grid.minor = element_blank(),
+            panel.grid.major.y = element_blank()
+        )
+    )
+}
+
+theme_minimal_h <- function() {
+    list(
+        theme_minimal(14),
+        theme(
+            panel.grid.minor = element_blank(),
+            panel.grid.major.x = element_blank()
+        )
+    )
+}
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-    output$n_tweets <- renderInfoBox({
-        infoBox("Tweets", value = NA, fill = TRUE, icon = icon("twitter"), color = "yellow", width = 3)
-    })
 
-    output$n_mentions <- renderInfoBox({
-        infoBox("Mentions", value = NA, fill = TRUE, icon = icon("bullhorn"), color = "yellow", width = 3)
-    })
+  from_date <- reactive({
+      lubridate::add_with_rollback(lubridate::today(), -months(1)) %>%
+          as.Date()
+  })
 
-    output$most_liked <- renderInfoBox({
-        infoBox("Likes", value = NA, fill = TRUE, icon = icon("heart"), color = "yellow", width = 3)
-    })
 
-    output$most_retweeted <- renderInfoBox({
-        infoBox("Retweets", value = NA, fill = TRUE, icon = icon("retweet"), color = "yellow", width = 3)
-    })
+  mentions_since <- reactive({
+      ser_mentions %>%
+          filter(created_at >= from_date())
+  })
 
+  mentioners_since <- reactive({
+      mentioners %>%
+          filter(created_at >= from_date())
+  })
+
+  tweets_since <- reactive({
+      ser_tweets %>%
+          filter(created_at >= from_date(), !is_retweet)
+  })
+
+  n_followers_since <- reactive({
+      n_followers %>%
+          filter(date >= from_date())
+  })
+
+  output$n_tweets <- renderInfoBox({
+    infoBox("Tweets", value = nrow(tweets_since()), fill = TRUE, icon = icon("twitter"), color = "yellow")
+  })
+
+  output$n_mentions <- renderInfoBox({
+    infoBox("Mentions", value = nrow(mentions_since()), fill = TRUE, icon = icon("bullhorn"), color = "yellow")
+  })
+
+
+  output$n_mentioners <- renderInfoBox({
+      infoBox("Unique Mentioners", value = n_distinct(mentioners_since()$user_id), fill = TRUE, icon = icon("users"), color = "yellow")
+  })
+
+
+  output$most_liked <- renderInfoBox({
+    n_likes <- sum(tweets_since()$favorite_count, na.rm = TRUE)
+    infoBox("Likes", value = n_likes, fill = TRUE, icon = icon("heart"), color = "yellow")
+  })
+
+  output$most_retweeted <- renderInfoBox({
+    n_retweets<- sum(tweets_since()$retweet_count, na.rm = TRUE)
+    infoBox("Retweets", value = n_retweets, fill = TRUE, icon = icon("retweet"), color = "yellow")
+  })
+
+  output$n_followers <- renderInfoBox({
+    infoBox("Followers", value = sum(n_followers_since()$n_followers), fill = TRUE, icon = icon("keyboard"), color = "yellow")
+  })
+
+  output$n_tweets_plot <- renderPlotly({
+     n_tweets_plot <- tweets_since() %>%
+      ts_plot(color = "#0172B1", size = .8) +
+      theme_minimal_v()
+
+     ggplotly(n_tweets_plot)
+  })
+
+  output$most_x_plot <- renderPlotly({
+    most_x_plot <- tweets_since() %>%
+      arrange(desc(favorite_count)) %>%
+      head(100) %>%
+      arrange(favorite_count) %>%
+      ggplot(aes(fct_inorder(status_id), favorite_count)) +
+      geom_jitter(col = "white", fill = "#0072B2", shape = 21, size = 2.2) +
+      theme_minimal_h() +
+      theme(axis.text.x = element_blank()) +
+      labs(x = "tweet", y = "favorites")
+
+    ggplotly(most_x_plot)
+  })
+
+  output$mentions_plot <- renderPlotly({
+    mentions_plot <- mentions_since() %>%
+      ts_plot(color = "#0172B1", size = .8) +
+      theme_minimal_v()
+
+    ggplotly(mentions_plot)
+  })
+
+  output$top_mentions_plot <- renderPlotly({
+   top_mentions_plot <- mentioners_since() %>%
+      count(screen_name) %>%
+      arrange(desc(n)) %>%
+      head(18) %>%
+      mutate(
+          screen_name = paste0("@", screen_name),
+          screen_name = fct_rev(fct_inorder(screen_name))
+      ) %>%
+      ggplot(aes(screen_name, n)) +
+      geom_col(col = "white", fill = "#0072B2") +
+      coord_flip() +
+      theme_minimal_v() +
+      theme(
+        axis.title.y = element_blank(),
+        axis.text.y = element_text(hjust = 1)
+      ) +
+      ylab("mentions")
+
+      ggplotly(top_mentions_plot)
+  })
+
+  output$top_liked <- renderUI({
+      status_id <- tweets_since() %>%
+          arrange(desc(favorite_count)) %>%
+          slice(1) %>%
+          pull(status_id)
+
+      embed_tweet(status_id)
+  })
+
+  output$top_retweeted <- renderUI({
+      status_id <- tweets_since() %>%
+          arrange(desc(retweet_count)) %>%
+          slice(1) %>%
+          pull(status_id)
+
+      embed_tweet(status_id)
+  })
 })

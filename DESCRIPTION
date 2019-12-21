@@ -13,6 +13,7 @@ Description: A set of tools to use within the Society for
 License: MIT + file LICENSE
 Imports: 
     dplyr,
+    forcats,
     fs,
     glue,
     gmailr,
@@ -20,6 +21,7 @@ Imports:
     gt,
     lubridate,
     magrittr,
+    plotly,
     readr,
     rstudioapi,
     rtweet,
