@@ -15,6 +15,8 @@ library(plotly)
 library(ggplot2)
 library(dplyr)
 library(forcats)
+library(lubridate)
+library(rlang)
 
 # ser_mentions <- get_mentions(token = ser_token())
 # mentioners <- lookup_tweets(ser_mentions$status_id, token = ser_token())
@@ -44,29 +46,44 @@ theme_minimal_h <- function() {
 shinyServer(function(input, output) {
 
   from_date <- reactive({
-      lubridate::add_with_rollback(lubridate::today(), -months(1)) %>%
+      if (input$timerange == "NA") return(NA)
+      add_with_rollback(today(), -days(input$timerange)) %>%
           as.Date()
   })
 
 
   mentions_since <- reactive({
+      if (is.na(from_date())) return(ser_mentions)
       ser_mentions %>%
           filter(created_at >= from_date())
   })
 
   mentioners_since <- reactive({
+      if (is.na(from_date())) return(mentioners)
       mentioners %>%
           filter(created_at >= from_date())
   })
 
   tweets_since <- reactive({
+      if (is.na(from_date())) return(filter(ser_tweets, !is_retweet))
       ser_tweets %>%
           filter(created_at >= from_date(), !is_retweet)
   })
 
   n_followers_since <- reactive({
+      if (is.na(from_date())) return(n_followers)
       n_followers %>%
           filter(date >= from_date())
+  })
+
+  x_date_lim <- reactive({
+      if (is.na(from_date())) return(list())
+      list(
+          xlim(
+              as_datetime(today() - days(input$timerange)),
+              as_datetime(today())
+          )
+      )
   })
 
   output$n_tweets <- renderInfoBox({
@@ -94,35 +111,40 @@ shinyServer(function(input, output) {
   })
 
   output$n_followers <- renderInfoBox({
-    infoBox("Followers", value = sum(n_followers_since()$n_followers), fill = TRUE, icon = icon("keyboard"), color = "yellow")
+    infoBox("Followers", value = n_followers_since()$n_followers[nrow(n_followers_since())], fill = TRUE, icon = icon("keyboard"), color = "yellow")
   })
 
   output$n_tweets_plot <- renderPlotly({
      n_tweets_plot <- tweets_since() %>%
       ts_plot(color = "#0172B1", size = .8) +
+      x_date_lim() +
       theme_minimal_v()
 
      ggplotly(n_tweets_plot)
   })
 
   output$most_x_plot <- renderPlotly({
+    most_x <- sym(input$most_x)
+
     most_x_plot <- tweets_since() %>%
-      arrange(desc(favorite_count)) %>%
+      arrange(desc(!!most_x)) %>%
       head(100) %>%
-      arrange(favorite_count) %>%
-      ggplot(aes(fct_inorder(status_id), favorite_count)) +
-      geom_jitter(col = "white", fill = "#0072B2", shape = 21, size = 2.2) +
+      arrange(!!most_x) %>%
+      mutate(text = stringr::str_wrap(text), status_id = fct_inorder(status_id)) %>%
+      ggplot(aes_string("status_id", input$most_x, text = "text")) +
+      geom_point(col = "white", fill = "#0072B2", shape = 21, size = 2.2) +
       theme_minimal_h() +
       theme(axis.text.x = element_blank()) +
-      labs(x = "tweet", y = "favorites")
+      labs(x = "tweet", y = ifelse(input$most_x == "favorite_count", "favorites", "retweets"))
 
-    ggplotly(most_x_plot)
+    ggplotly(most_x_plot, tooltip = c("text", "y"))
   })
 
   output$mentions_plot <- renderPlotly({
     mentions_plot <- mentions_since() %>%
       ts_plot(color = "#0172B1", size = .8) +
-      theme_minimal_v()
+      theme_minimal_v() +
+      x_date_lim()
 
     ggplotly(mentions_plot)
   })
@@ -148,6 +170,27 @@ shinyServer(function(input, output) {
 
       ggplotly(top_mentions_plot)
   })
+
+  output$n_followers_plot <- renderPlotly({
+      n_followers_plot <- n_followers_since() %>%
+          mutate(date = lubridate::as_datetime(date), n_followers = as.integer(n_followers)) %>%
+          ggplot(aes(date, n_followers)) +
+          geom_line(col = "#0072B2") +
+          geom_point(col = "white", fill = "#0072B2", shape = 21, size = 2.2) +
+          theme_minimal_v() +
+          theme(
+              axis.title.y = element_blank(),
+              axis.text.y = element_text(hjust = 1)
+          ) +
+          ylab("n followers") +
+          xlab("date") +
+          scale_y_continuous(breaks = function(x) floor(scales::breaks_pretty()(x))) +
+          x_date_lim()
+
+      ggplotly(n_followers_plot)
+  })
+
+
 
   output$top_liked <- renderUI({
       status_id <- tweets_since() %>%
