@@ -37,3 +37,5 @@ email <- function(x, y) {
 gmail <- function(x) {
   email(x, "gmail.com")
 }
+
+`%nin%` <- Negate(`%in%`)

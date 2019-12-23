@@ -121,26 +121,3 @@ action_auto_tweet <- function(twitter_token = ser_token, google_drive_auth = dri
   # return updated tweet queue
   invisible(tweet_queue)
 }
-
-#' Get tokens for auto-tweet functionality
-#'
-#' @return A Twitter or Google Drive token
-#' @export
-drive_auth_token <- function() {
-  Sys.getenv("DRIVE_AUTH_TOKEN_PATH")
-}
-
-#' @export
-#' @rdname drive_auth_token
-ser_token <- function() {
-  app_name <- Sys.getenv("TWITTER_APP_NAME")
-  if (app_name == "") app_name <- "tweet_tokens_ser"
-  rtweet::create_token(
-    app_name,
-    consumer_key = Sys.getenv("SER_CONSUMER_KEY"),
-    consumer_secret = Sys.getenv("SER_CONSUMER_SECRET"),
-    access_token = Sys.getenv("SER_ACCESS_TOKEN"),
-    access_secret = Sys.getenv("SER_ACCESS_SECRET"),
-    set_renv = FALSE
-  )
-}
