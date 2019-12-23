@@ -42,7 +42,10 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
   ser_tweets <- rtweet::get_timeline("societyforepi", n = 100, token = twitter_token())
   todays_tweets <- ser_tweets %>%
     # set time zone to New York
-    dplyr::mutate(date = lubridate::ymd_hms(created_at, tz = "UTC") %>% lubridate::with_tz(get_ny_tz())) %>%
+    dplyr::mutate(
+      date = lubridate::ymd_hms(created_at, tz = "UTC") %>% lubridate::with_tz(get_ny_tz()),
+      text = stringr::str_replace_all(text, "\\&amp\\;", "\\&")
+    ) %>%
     dplyr::filter(lubridate::floor_date(date, "day") == yesterday)
 
   original_tweets <- todays_tweets %>%
@@ -53,13 +56,33 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
     dplyr::filter(is_retweet) %>%
     dplyr::select(Time = date, `Retweeted From` = retweet_screen_name, `Retweet Text` = text)
 
+  mention_tweets <- rtweet::get_mentions(token = twitter_token())
+
+  mentions <- mention_tweets %>%
+    # only get direct mentions or replies
+    filter(is.na(in_reply_to_screen_name) | in_reply_to_screen_name == "societyforepi") %>%
+    # set time zone to New York
+    dplyr::mutate(
+      date = lubridate::ymd_hms(created_at, tz = "UTC") %>% lubridate::with_tz(get_ny_tz()),
+      text = stringr::str_replace_all(text, "\\&amp\\;", "\\&")
+    ) %>%
+    dplyr::filter(lubridate::floor_date(date, "day") == yesterday)
+
+  mention_ids <- rtweet::lookup_tweets(mentions$status_id, token = twitter_token())
+
+  mentions <- mentions %>%
+    dplyr::left_join(mention_ids %>% select(status_id, screen_name), by = "status_id") %>%
+    dplyr::select(Time = date, `Mentioned By` = screen_name, `Tweet Text` = text)
+
   email_msg <- paste(
     "<h1> Tweets from @societyforepi:",
     yesterday,
     "</h1> \n",
     build_html(original_tweets, "tweets"),
     "\n",
-    build_html(retweets, "retweets")
+    build_html(retweets, "retweets"),
+    "\n",
+    build_html(mentions, "mentions")
   )
 
   gmailr::mime() %>%
