@@ -60,7 +60,7 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
 
   mentions <- mention_tweets %>%
     # only get direct mentions or replies
-    filter(is.na(in_reply_to_screen_name) | in_reply_to_screen_name == "societyforepi") %>%
+    dplyr::filter(is.na(in_reply_to_screen_name) | in_reply_to_screen_name == "societyforepi") %>%
     # set time zone to New York
     dplyr::mutate(
       date = lubridate::ymd_hms(created_at, tz = "UTC") %>% lubridate::with_tz(get_ny_tz()),
@@ -68,11 +68,13 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
     ) %>%
     dplyr::filter(lubridate::floor_date(date, "day") == yesterday)
 
-  mention_ids <- rtweet::lookup_tweets(mentions$status_id, token = twitter_token())
+  if (!purrr::is_empty(mentions$status_id)) {
+    mention_ids <- rtweet::lookup_tweets(mentions$status_id, token = twitter_token())
 
-  mentions <- mentions %>%
-    dplyr::left_join(mention_ids %>% select(status_id, screen_name), by = "status_id") %>%
-    dplyr::select(Time = date, `Mentioned By` = screen_name, `Tweet Text` = text)
+    mentions <- mentions %>%
+      dplyr::left_join(mention_ids %>% dplyr::select(status_id, screen_name), by = "status_id") %>%
+      dplyr::select(Time = date, `Mentioned By` = screen_name, `Tweet Text` = text)
+  }
 
   email_msg <- paste(
     "<h1> Tweets from @societyforepi:",
