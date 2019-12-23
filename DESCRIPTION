@@ -25,6 +25,7 @@ Imports:
     readr,
     rstudioapi,
     rtweet,
+    sass,
     shiny,
     shinydashboard,
     stringr,
