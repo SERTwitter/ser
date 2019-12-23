@@ -5,6 +5,7 @@ build_html <- function(.data, .message) {
 
   table_html <- .data %>%
     gt::gt() %>%
+    gt::fmt_markdown(dplyr::vars(Time)) %>%
     gt::as_raw_html()
 
   glue::glue("<h2> Today's {.message}: </h2> \n {table_html}")
@@ -50,11 +51,15 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
 
   original_tweets <- todays_tweets %>%
     dplyr::filter(!is_retweet) %>%
-    dplyr::select(Time = date, `Tweet Text` = text)
+    dplyr::mutate(url = paste0("https://www.twitter.com/", screen_name, "/status/", status_id)) %>%
+    dplyr::mutate(Time = paste0("[", date, "](", url, ")")) %>%
+    dplyr::select(Time, `Tweet Text` = text)
 
   retweets <- todays_tweets %>%
     dplyr::filter(is_retweet) %>%
-    dplyr::select(Time = date, `Retweeted From` = retweet_screen_name, `Retweet Text` = text)
+    dplyr::mutate(url = paste0("https://www.twitter.com/", screen_name, "/status/", status_id)) %>%
+    dplyr::mutate(Time = paste0("[", date, "](", url, ")")) %>%
+    dplyr::select(Time, `Retweeted From` = retweet_screen_name, `Retweet Text` = text)
 
   mention_tweets <- rtweet::get_mentions(token = twitter_token())
 
@@ -73,7 +78,9 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
 
     mentions <- mentions %>%
       dplyr::left_join(mention_ids %>% dplyr::select(status_id, screen_name), by = "status_id") %>%
-      dplyr::select(Time = date, `Mentioned By` = screen_name, `Tweet Text` = text)
+      dplyr::mutate(url = paste0("https://www.twitter.com/", screen_name, "/status/", status_id)) %>%
+      dplyr::mutate(Time = paste0("[", date, "](", url, ")")) %>%
+      dplyr::select(Time, `Mentioned By` = screen_name, `Tweet Text` = text)
   }
 
   email_msg <- paste(
