@@ -121,4 +121,3 @@ action_auto_tweet <- function(twitter_token = ser_token, google_drive_auth = dri
   # return updated tweet queue
   invisible(tweet_queue)
 }
-

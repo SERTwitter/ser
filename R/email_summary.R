@@ -35,8 +35,7 @@ get_ny_tz <- function() {
 #' @return the email to be sent, a character vector
 #' @export
 action_email_summary <- function(recipients, twitter_token = ser_token) {
-  gmailr::gm_auth_configure(gmail_id(), gmail_secret())
-  gmailr::gm_auth(email = gmail_email(), scopes = "compose", token = gmailr::gm_oauth_app())
+  authorize_gmailr()
 
   yesterday <- lubridate::today() - lubridate::days(1)
 
@@ -72,4 +71,14 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
     gmailr::send_message()
 
   invisible(email_msg)
+}
+
+authorize_gmailr <- function() {
+  googledrive::drive_auth(path = drive_auth_token())
+  googledrive::drive_download(googledrive::as_id("190WyqiP-ogT6NY3PzRSiCafGzylPaoQt"), overwrite = TRUE)
+  unzip(".secret.zip")
+  gmailr::gm_auth_configure()
+  gmailr::gm_auth(email = gmail_email(), cache = ".secret", scopes = "compose")
+  zip(".secret.zip", ".secret")
+  googledrive::drive_update(googledrive::as_id("190WyqiP-ogT6NY3PzRSiCafGzylPaoQt"), ".secret.zip")
 }

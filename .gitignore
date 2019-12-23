@@ -5,3 +5,4 @@ client_id.json
 ttt.rds
 .httr-oauth
 inst/shiny_apps/tweet_dashboard/data/
+.secret
