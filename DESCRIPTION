@@ -23,6 +23,7 @@ Imports:
     magrittr,
     plotly,
     readr,
+    rsconnect,
     rstudioapi,
     rtweet,
     sass,
