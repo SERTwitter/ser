@@ -10,7 +10,7 @@
 #' @return invisibly, `path`
 #' @export
 download_twitter_data <- function(path = ".", google_drive_auth = drive_auth_token()) {
-  path <- normalizePath(path, mustWork = FALSE))
+  path <- normalizePath(path, mustWork = FALSE)
   if (!fs::dir_exists(path)) fs::dir_create(path)
   googledrive::drive_auth(path = google_drive_auth)
 
