@@ -4,9 +4,12 @@
 \alias{action_meeting_tweet}
 \title{Post tweets about the SER Annual Meeting}
 \usage{
-action_meeting_tweet(period_start = "2019-03-01",
-  period_end = "2019-06-18", twitter_token = ser_token,
-  google_drive_auth = "ttt.rds")
+action_meeting_tweet(
+  period_start = "2019-03-01",
+  period_end = "2019-06-18",
+  twitter_token = ser_token,
+  google_drive_auth = "ttt.rds"
+)
 }
 \arguments{
 \item{period_start}{beginning of period to tweet about meeting}

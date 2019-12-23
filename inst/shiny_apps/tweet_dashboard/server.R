@@ -18,9 +18,10 @@ library(forcats)
 library(lubridate)
 library(rlang)
 
-# ser_mentions <- get_mentions(token = ser_token())
-# mentioners <- lookup_tweets(ser_mentions$status_id, token = ser_token())
-# ser_tweets <- get_timeline("societyforepi", n = 1e4, token = ser_token())
+ser_mentions <- readr::read_rds(file.path("data", "ser_mentions.Rds"))
+mentioners <- readr::read_rds(file.path("data", "mentioners.Rds"))
+ser_tweets <- readr::read_rds(file.path("data", "ser_tweets.Rds"))
+n_followers <- readr::read_rds(file.path("data", "n_followers.Rds"))
 
 theme_minimal_v <- function() {
     list(
