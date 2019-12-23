@@ -21,12 +21,15 @@ remotes::install_github("SERTwitter/ser")
 
 ser handles automatic daily tweeting to supplement the work done by
 content leads, daily email summaries of Twitter activity on the SER
-account, and posts tweets related to the annual meeting during the three
-months prior.
+account, posts tweets related to the annual meeting during the three
+months prior, collects SER-related Twitter data, and deploys a dashboard
+about SER Twitter activity to shinyapps.io.
 
   - `action_auto_tweet()`
   - `action_email_summary()`
   - `action_meeting_tweet()`
+  - `action_deploy_dashboard()`
+  - `action_collect_twitter_data()`
 
 ser also provides functions to email summaries of errors that may occur
 in code while running automatically on the server. `action_safely()`
@@ -50,7 +53,13 @@ safe_auto_error()
 ## Adding and deploying scripts
 
 Add functions you need for your script in `R/`. Add the script that
-should be deployed to `inst/scripts`.
+should be deployed to `inst/scripts` or use `use_ser_script()` to write
+and open a new script file.
+
+``` r
+# do not include `.R` at the end of the name
+use_ser_script("script_name")
+```
 
 We use GitHub Actions to deploy our scripts. Create a repository under
 the SERTwitter account. Inside of the repository, run
@@ -59,7 +68,6 @@ will add a DESCRIPTION file and the YAML file you need to deploy to GH
 Actions
 
 ``` r
-# do not include `.R` at the end of the name
 deploy_ghactions("script_name")
 ```
 
