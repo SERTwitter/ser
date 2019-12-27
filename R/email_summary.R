@@ -45,7 +45,11 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
     # set time zone to New York
     dplyr::mutate(
       date = lubridate::ymd_hms(created_at, tz = "UTC") %>% lubridate::with_tz(get_ny_tz()),
-      text = stringr::str_replace_all(text, "\\&amp\\;", "\\&")
+      # replace HTML characters with literal characters. May need to use something more general if this
+      # gets unweildy in time, e.g. a lookup table or `gt::fmt_markdown()`
+      text = stringr::str_replace_all(text, "\\&amp\\;", "\\&"),
+      text = stringr::str_replace_all(text, "\\&gt\\;", "\\>"),
+      text = stringr::str_replace_all(text, "\\&lt\\;", "\\<")
     ) %>%
     dplyr::filter(lubridate::floor_date(date, "day") == yesterday)
 
