@@ -30,7 +30,8 @@ Imports:
     shiny,
     shinydashboard,
     stringr,
-    usethis (>= 1.5.0)
+    usethis (>= 1.5.0),
+    shinycssloaders
 Remotes: 
     rstudio/gt
 Encoding: UTF-8

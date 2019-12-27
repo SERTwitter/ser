@@ -9,6 +9,7 @@
 
 library(shiny)
 library(shinydashboard)
+library(shinycssloaders)
 library(plotly)
 
 # Define UI for application that draws a histogram
@@ -36,16 +37,16 @@ shinyUI(
                         infoBoxOutput("most_retweeted")
                     ),
                     fluidRow(
-                        box(plotlyOutput("n_tweets_plot"), title = "Tweets from SER"),
+                        box(withSpinner(plotlyOutput("n_tweets_plot")), title = "Tweets from SER"),
                         box(
-                            plotlyOutput("most_x_plot"),
+                            withSpinner(plotlyOutput("most_x_plot")),
                             selectInput("most_x", "Sort by", choices = c("Favorites" = "favorite_count", "Retweets" = "retweet_count")),
                             title = "Top 100 Tweets"
                         )
                     ),
                     fluidRow(
-                        box(uiOutput("top_liked"), title = "Most Favorited SER Tweet"),
-                        box(uiOutput("top_retweeted"), title = "Most Retweeted SER Tweet")
+                        box(withSpinner(uiOutput("top_liked")), title = "Most Favorited SER Tweet"),
+                        box(withSpinner(uiOutput("top_retweeted")), title = "Most Retweeted SER Tweet")
                     )
                 ),
                 tabItem(
@@ -55,8 +56,8 @@ shinyUI(
                         infoBoxOutput("n_mentioners")
                     ),
                     fluidRow(
-                        box(plotlyOutput("mentions_plot"), title = "Mentions of @societyforepi"),
-                        box(plotlyOutput("top_mentions_plot"), title = "Most Frequent Mentioners")
+                        box(withSpinner(plotlyOutput("mentions_plot")), title = "Mentions of @societyforepi"),
+                        box(withSpinner(plotlyOutput("top_mentions_plot")), title = "Most Frequent Mentioners")
                     )
                 ),
                 tabItem(
@@ -65,7 +66,7 @@ shinyUI(
                         infoBoxOutput("n_followers")
                     ),
                     fluidRow(
-                        box(plotlyOutput("n_followers_plot"), title = "Number of followers")
+                        box(withSpinner(plotlyOutput("n_followers_plot")), title = "Number of followers")
                     )
                 )
             )
