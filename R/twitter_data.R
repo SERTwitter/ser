@@ -89,7 +89,7 @@ update_twitter_data <- function(path = ".", google_drive_auth = drive_auth_token
   }
 
   # bind updated data to existing data --------------------------------------
-  ser_mentions <- rtweet::do_call_rbind(list(ser_mentions_update, ser_mentions))
+  ser_mentions <- dplyr::bind_rows(ser_mentions_update, ser_mentions)
   mentioners <- rtweet::do_call_rbind(list(mentioners_update, mentioners))
   ser_tweets <- dplyr::anti_join(ser_tweets_update, ser_tweets, by = "status_id") %>%
     list(ser_tweets) %>%
