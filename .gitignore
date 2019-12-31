@@ -7,3 +7,4 @@ ttt.rds
 inst/shiny_apps/tweet_dashboard/data/
 .secret
 .secret.zip
+.DS_Store
