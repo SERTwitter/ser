@@ -6,6 +6,7 @@ build_html <- function(.data, .message) {
   table_html <- .data %>%
     gt::gt() %>%
     gt::fmt_markdown(dplyr::vars(Time)) %>%
+    gt::tab_options(table.width = gt::pct(100)) %>%
     gt::as_raw_html()
 
   glue::glue("<h2> Today's {.message}: </h2> \n {table_html}")
