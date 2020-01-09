@@ -83,6 +83,7 @@ action_email_summary <- function(recipients, twitter_token = ser_token) {
 
     mentions <- mentions %>%
       dplyr::left_join(mention_ids %>% dplyr::select(status_id, screen_name), by = "status_id") %>%
+      dplyr::filter(screen_name != "societyforepi") %>%
       dplyr::mutate(url = paste0("https://www.twitter.com/", screen_name, "/status/", status_id)) %>%
       dplyr::mutate(Time = paste0("[", date, "](", url, ")")) %>%
       dplyr::select(Time, `Mentioned By` = screen_name, `Tweet Text` = text)
