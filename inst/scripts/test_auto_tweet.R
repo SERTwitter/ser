@@ -24,3 +24,5 @@ safe_action_auto_tweet <- action_safely(action_auto_tweet(twitter_token = sandbo
 safe_action_auto_tweet()
 
 
+action_auto_tweet(twitter_token = sandbox_token())
+

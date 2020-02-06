@@ -1,18 +1,36 @@
 # functions to post tweet depending on type
-post_tweet_queue <- function(tweet_data = tweet_form,
+post_tweet_queue <- function(tweet_data = tweet_library,
                              past_tweets = tweet_hist_list,
                              twitter_token = ser_token) {
 
   tweet_data <- tweet_data %>%
     dplyr::mutate(
       id_transform =
-        stringr::str_remove_all(Timestamp, pattern = "\\s|:|/")) %>%
-    dplyr::filter(!id_transform %in% past_tweets) %>%
-    dplyr::sample_n(1)
+        stringr::str_remove_all(Timestamp, pattern = "\\s|:|/"))
+
+
+  id_check <- tweet_data %>%
+    dplyr::filter(!id_transform %in% past_tweets)
+
+  if (nrow(id_check) == 0) {
+
+    tweet_data <- tweet_data %>%
+      dplyr::sample_n(1)
+
+    restart_history <- TRUE
+
+  } else {
+
+    tweet_data <- id_check %>%
+      dplyr::sample_n(1)
+
+    restart_history <- FALSE
+  }
 
   rtweet::post_tweet(tweet_data$Tweet, token = twitter_token)
 
-  invisible(tweet_data$id_transform)
+  invisible(list(restart_history = restart_history,
+                 just_tweeted = tweet_data$id_transform))
 }
 
 update_retweets <- function(twitter_token = ser_token) {
@@ -70,25 +88,25 @@ action_auto_tweet <- function(twitter_token = ser_token,
   googledrive::drive_auth(path = google_drive_auth)
 
   # download the existing tweet form entries from google drive
-  tweet_form_id <- googledrive::drive_find(
-    pattern = "tweet_entry_responses",
+  tweet_library_id <- googledrive::drive_find(
+    pattern = "ser_tweet_library",
     type = "spreadsheet"
     ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
-  googledrive::drive_download(tweet_form_id, type = "csv", overwrite = TRUE)
-  tweet_form <- readr::read_csv("tweet_entry_responses.csv")
+  googledrive::drive_download(tweet_library_id, type = "csv", overwrite = TRUE)
+  tweet_library <- readr::read_csv("ser_tweet_library.csv")
 
   # download tweet history
   tweet_hist_id <- googledrive::drive_find(
-    pattern = "tweet_history",
+    pattern = "ser_tweet_history",
     type = "spreadsheet"
     ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
   googledrive::drive_download(tweet_hist_id, type = "csv", overwrite = TRUE)
-  tweet_hist <- readr::read_csv("tweet_history.csv")
-  tweet_hist_list <- stringr::str_remove_all(tweet_hist$TweetID, pattern = "\\s|:|/")
+  tweet_hist <- readr::read_csv("ser_tweet_history.csv")
+  tweet_hist_list <- stringr::str_remove_all(tweet_hist$tweet_id, pattern = "\\s|:|/")
 
   # do the same for the retweets queue
   retweet_csv_id <- googledrive::drive_find(pattern = "retweet_queue", type = "spreadsheet") %>%
@@ -101,7 +119,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
   todays_date <- lubridate::wday(Sys.Date(), label = TRUE) %>%
     as.character()
   if (todays_date %in% c("Mon", "Tue", "Wed", "Thu", "Fri")) {
-    post_tweet_of_type <- post_tweet_queue(tweet_data = tweet_form,
+    post_tweet_of_type <- post_tweet_queue(tweet_data = tweet_library,
                                            past_tweets = tweet_hist_list,
                                            twitter_token = twitter_token)
   } else {
@@ -128,15 +146,20 @@ action_auto_tweet <- function(twitter_token = ser_token,
   if (retweet_day) {
     retweet_queue <- post_tweet_of_type(retweet_queue)
   } else {
-    just_tweeted <- post_tweet_of_type
+    tweet_library_status <- post_tweet_of_type
   }
 
-  tweet_hist <- data.frame(TweetID = c(tweet_hist_list,
-                                       just_tweeted))
+  if (tweet_library_status$restart_history) {
+    tweet_hist <- data.frame(tweet_id = tweet_library_status$just_tweeted)
+  } else {
+    tweet_hist <- data.frame(tweet_id = c(tweet_hist_list,
+                                          tweet_library_status$just_tweeted))
+  }
+
 
   # update tweet and retweet queues
-  readr::write_csv(tweet_hist, "tweet_history.csv")
-  googledrive::drive_update(tweet_hist_id, "tweet_history.csv")
+  readr::write_csv(tweet_hist, "ser_tweet_history.csv")
+  googledrive::drive_update(tweet_hist_id, "ser_tweet_history.csv")
   readr::write_csv(retweet_queue, "retweet_queue.csv")
   googledrive::drive_update(retweet_csv_id, "retweet_queue.csv")
 
