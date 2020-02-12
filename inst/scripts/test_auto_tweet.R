@@ -22,7 +22,3 @@ assignInNamespace("is_tweet_length", is_tweet_length, ns = "rtweet")
 on_error_email_to(c(gmail("malcolmbarrett")))
 safe_action_auto_tweet <- action_safely(action_auto_tweet(twitter_token = sandbox_token()))
 safe_action_auto_tweet()
-
-
-action_auto_tweet(twitter_token = sandbox_token())
-
