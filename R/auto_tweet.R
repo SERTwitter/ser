@@ -1,36 +1,29 @@
 # functions to post tweet depending on type
-post_tweet_queue <- function(tweet_data = tweet_library,
-                             past_tweets = tweet_hist_list,
-                             twitter_token = ser_token) {
+post_tweet_library <- function(tweet_data = tweet_library,
+                               past_tweets = tweet_hist_list,
+                               twitter_token = ser_token) {
 
-  tweet_data <- tweet_data %>%
-    dplyr::mutate(
-      id_transform =
+  tweet_datac <- tweet_data %>%
+    dplyr::mutate(id_transform =
         stringr::str_remove_all(Timestamp, pattern = "\\s|:|/"))
 
-
-  id_check <- tweet_data %>%
+  id_check <- tweet_datac %>%
     dplyr::filter(!id_transform %in% past_tweets)
 
   if (nrow(id_check) == 0) {
-
-    tweet_data <- tweet_data %>%
+    tweet_datac <- tweet_datac %>%
       dplyr::sample_n(1)
-
     restart_history <- TRUE
-
   } else {
-
-    tweet_data <- id_check %>%
+    tweet_datac <- id_check %>%
       dplyr::sample_n(1)
-
     restart_history <- FALSE
   }
 
-  rtweet::post_tweet(tweet_data$Tweet, token = twitter_token)
+  rtweet::post_tweet(tweet_datac$Tweet, token = twitter_token)
 
   invisible(list(restart_history = restart_history,
-                 just_tweeted = tweet_data$id_transform))
+                 just_tweeted = tweet_datac$id_transform))
 }
 
 update_retweets <- function(twitter_token = ser_token) {
@@ -106,7 +99,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
     googledrive::as_id()
   googledrive::drive_download(tweet_hist_id, type = "csv", overwrite = TRUE)
   tweet_hist <- readr::read_csv("ser_tweet_history.csv")
-  tweet_hist_list <- stringr::str_remove_all(tweet_hist$tweet_id, pattern = "\\s|:|/")
+  tweet_hist_list <- as.character(tweet_hist$tweet_id)
 
   # do the same for the retweets queue
   retweet_csv_id <- googledrive::drive_find(pattern = "retweet_queue", type = "spreadsheet") %>%
@@ -119,9 +112,9 @@ action_auto_tweet <- function(twitter_token = ser_token,
   todays_date <- lubridate::wday(Sys.Date(), label = TRUE) %>%
     as.character()
   if (todays_date %in% c("Mon", "Tue", "Wed", "Thu", "Fri")) {
-    post_tweet_of_type <- post_tweet_queue(tweet_data = tweet_library,
-                                           past_tweets = tweet_hist_list,
-                                           twitter_token = twitter_token)
+    post_tweet_of_type <- post_tweet_library(tweet_data = tweet_library,
+                                             past_tweets = tweet_hist_list,
+                                             twitter_token = twitter_token)
   } else {
     post_tweet_of_type <- blackout_tweet
   }
