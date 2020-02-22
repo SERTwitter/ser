@@ -20,5 +20,7 @@ is_tweet_length <- function(.x, n = 280) {
 assignInNamespace("is_tweet_length", is_tweet_length, ns = "rtweet")
 
 on_error_email_to(c(gmail("malcolmbarrett")))
+# if testing post_tweet_of_type manually on a weekend, set apply_test_dat = TRUE
+# in action_auto_tweet() below
 safe_action_auto_tweet <- action_safely(action_auto_tweet(twitter_token = sandbox_token()))
 safe_action_auto_tweet()

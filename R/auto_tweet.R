@@ -73,7 +73,9 @@ blackout_tweet <- function(tweet_data = tweet_queue) {
 #'
 #' @export
 action_auto_tweet <- function(twitter_token = ser_token,
-                              google_drive_auth = drive_auth_token()) {
+                              google_drive_auth = drive_auth_token(),
+                              apply_test_date = FALSE) {
+
   # Authorize Google Drive for cron job
   # previous code
   # ttt <- googledrive::drive_auth(google_drive_auth)
@@ -108,9 +110,14 @@ action_auto_tweet <- function(twitter_token = ser_token,
   googledrive::drive_download(retweet_csv_id, type = "csv", overwrite = TRUE)
   retweet_queue <- readr::read_csv("retweet_queue.csv", col_types = "cciil")
 
-  # don't post on weekends
-  todays_date <- lubridate::wday(Sys.Date(), label = TRUE) %>%
-    as.character()
+  # don't post on weekends (unless apply_test_date == TRUE)
+  if (apply_test_date) {
+    todays_date <- "Mon"
+  } else {
+    todays_date <- lubridate::wday(Sys.Date(), label = TRUE) %>%
+      as.character()
+  }
+
   if (todays_date %in% c("Mon", "Tue", "Wed", "Thu", "Fri")) {
     post_tweet_of_type <- post_tweet_library(tweet_data = tweet_library,
                                              past_tweets = tweet_hist_list,
