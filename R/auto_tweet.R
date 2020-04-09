@@ -22,8 +22,12 @@ post_tweet_library <- function(tweet_data = tweet_library,
 
   rtweet::post_tweet(tweet_data$Tweet, token = twitter_token)
 
-  invisible(list(restart_history = restart_history,
-                 just_tweeted = tweet_data$id_transform))
+  invisible(
+    list(
+      restart_history = restart_history,
+      just_tweeted = tweet_data$id_transform
+    )
+  )
 }
 
 update_retweets <- function(twitter_token = ser_token) {
