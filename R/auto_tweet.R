@@ -104,7 +104,10 @@ action_auto_tweet <- function(twitter_token = ser_token,
   tweet_hist_ids <- tweet_hist$tweet_id
 
   # do the same for the retweets queue
-  retweet_csv_id <- googledrive::drive_find(pattern = "retweet_queue", type = "spreadsheet") %>%
+  retweet_csv_id <- googledrive::drive_find(
+    pattern = "retweet_queue",
+    type = "spreadsheet"
+    ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
   googledrive::drive_download(retweet_csv_id, type = "csv", overwrite = TRUE)
@@ -119,9 +122,11 @@ action_auto_tweet <- function(twitter_token = ser_token,
   }
 
   if (todays_date %in% c("Mon", "Tue", "Wed", "Thu", "Fri")) {
-    post_tweet_of_type <- post_tweet_library(tweet_data = tweet_library,
-                                             past_tweets = tweet_hist_ids,
-                                             twitter_token = twitter_token)
+    post_tweet_of_type <- post_tweet_library(
+      tweet_data = tweet_library,
+      past_tweets = tweet_hist_ids,
+      twitter_token = twitter_token
+    )
   } else {
     post_tweet_of_type <- blackout_tweet
   }
@@ -132,11 +137,19 @@ action_auto_tweet <- function(twitter_token = ser_token,
 
   # check that it's not a blackout date
   # if it is, don't post anything
-  blackout_id <- googledrive::drive_find(pattern = "tweet_blackout", type = "spreadsheet") %>%
+  blackout_id <- googledrive::drive_find(
+    pattern = "tweet_blackout",
+    type = "spreadsheet"
+    ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
+
   googledrive::drive_download(blackout_id, type = "csv", overwrite = TRUE)
-  tweet_blackout <- readr::read_csv("tweet_blackout.csv", col_types = list(date = readr::col_date("%m/%d/%Y")))
+  tweet_blackout <- readr::read_csv(
+    "tweet_blackout.csv",
+    col_types = list(date = readr::col_date("%m/%d/%Y"))
+  )
+
   blackout <- lubridate::today() %in% tweet_blackout$date
   if (blackout) post_tweet_of_type <- blackout_tweet
 
