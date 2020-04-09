@@ -166,8 +166,9 @@ action_auto_tweet <- function(twitter_token = ser_token,
   if (tweet_library_status$restart_history) {
     tweet_hist <- data.frame(tweet_id = tweet_library_status$just_tweeted)
   } else {
-    tweet_hist <- data.frame(tweet_id = c(tweet_hist_ids,
-                                          tweet_library_status$just_tweeted))
+    tweet_hist <- data.frame(
+      tweet_id = c(tweet_hist_ids, tweet_library_status$just_tweeted)
+    )
   }
 
 
