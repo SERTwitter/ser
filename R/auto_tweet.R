@@ -1,29 +1,29 @@
 # functions to post tweet depending on type
 post_tweet_library <- function(tweet_data = tweet_library,
-                               past_tweets = tweet_hist_list,
+                               past_tweets = tweet_hist_ids,
                                twitter_token = ser_token) {
 
-  tweet_datac <- tweet_data %>%
+  tweet_data <- tweet_data %>%
     dplyr::mutate(id_transform =
         stringr::str_remove_all(Timestamp, pattern = "\\s|:|/"))
 
-  id_check <- tweet_datac %>%
+  id_check <- tweet_data %>%
     dplyr::filter(!id_transform %in% past_tweets)
 
   if (nrow(id_check) == 0) {
-    tweet_datac <- tweet_datac %>%
+    tweet_data <- tweet_data %>%
       dplyr::sample_n(1)
     restart_history <- TRUE
   } else {
-    tweet_datac <- id_check %>%
+    tweet_data <- id_check %>%
       dplyr::sample_n(1)
     restart_history <- FALSE
   }
 
-  rtweet::post_tweet(tweet_datac$Tweet, token = twitter_token)
+  rtweet::post_tweet(tweet_data$Tweet, token = twitter_token)
 
   invisible(list(restart_history = restart_history,
-                 just_tweeted = tweet_datac$id_transform))
+                 just_tweeted = tweet_data$id_transform))
 }
 
 update_retweets <- function(twitter_token = ser_token) {
