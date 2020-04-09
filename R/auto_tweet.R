@@ -100,8 +100,8 @@ action_auto_tweet <- function(twitter_token = ser_token,
     dplyr::pull(id) %>%
     googledrive::as_id()
   googledrive::drive_download(tweet_hist_id, type = "csv", overwrite = TRUE)
-  tweet_hist <- readr::read_csv("ser_tweet_history.csv")
-  tweet_hist_list <- as.character(tweet_hist$tweet_id)
+  tweet_hist <- readr::read_csv("ser_tweet_history.csv", col_types = "c")
+  tweet_hist_ids <- tweet_hist$tweet_id
 
   # do the same for the retweets queue
   retweet_csv_id <- googledrive::drive_find(pattern = "retweet_queue", type = "spreadsheet") %>%
@@ -120,7 +120,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
 
   if (todays_date %in% c("Mon", "Tue", "Wed", "Thu", "Fri")) {
     post_tweet_of_type <- post_tweet_library(tweet_data = tweet_library,
-                                             past_tweets = tweet_hist_list,
+                                             past_tweets = tweet_hist_ids,
                                              twitter_token = twitter_token)
   } else {
     post_tweet_of_type <- blackout_tweet
@@ -152,7 +152,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
   if (tweet_library_status$restart_history) {
     tweet_hist <- data.frame(tweet_id = tweet_library_status$just_tweeted)
   } else {
-    tweet_hist <- data.frame(tweet_id = c(tweet_hist_list,
+    tweet_hist <- data.frame(tweet_id = c(tweet_hist_ids,
                                           tweet_library_status$just_tweeted))
   }
 
