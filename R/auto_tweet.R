@@ -128,9 +128,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
 
   # 1/10 days, retweet a popular SER tweet instead of posting a new one
   retweet_day <- sample(c(TRUE, FALSE), 1, prob = c(.1, .9))
-  if (retweet_day) {
-    post_tweet_of_type <- post_retweet(twitter_token = twitter_token)
-    }
+  if (retweet_day) post_tweet_of_type <- post_retweet(twitter_token = twitter_token)
 
   # check that it's not a blackout date
   # if it is, don't post anything
