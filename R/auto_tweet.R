@@ -60,6 +60,11 @@ blackout_tweet <- function(tweet_data = tweet_queue) {
   invisible(tweet_data)
 }
 
+get_day <- function() {
+  lubridate::wday(Sys.Date(), label = TRUE) %>%
+    as.character()
+}
+
 #' Post SER tweets from the tweet queue Monday through Friday
 #'
 #' `action_auto_tweet()` handles daily tweeting on the SER account. It randomly pulls
@@ -78,7 +83,7 @@ blackout_tweet <- function(tweet_data = tweet_queue) {
 #' @export
 action_auto_tweet <- function(twitter_token = ser_token,
                               google_drive_auth = drive_auth_token(),
-                              apply_test_date = FALSE) {
+                              todays_date = get_day()) {
 
   # Authorize Google Drive for cron job
   # previous code
@@ -117,14 +122,8 @@ action_auto_tweet <- function(twitter_token = ser_token,
   googledrive::drive_download(retweet_csv_id, type = "csv", overwrite = TRUE)
   retweet_queue <- readr::read_csv("retweet_queue.csv", col_types = "cciil")
 
-  # don't post on weekends (unless apply_test_date == TRUE)
-  if (apply_test_date) {
-    todays_date <- "Mon"
-  } else {
-    todays_date <- lubridate::wday(Sys.Date(), label = TRUE) %>%
-      as.character()
-  }
 
+  # check date and choose tweet type
   if (todays_date %in% c("Mon", "Tue", "Wed", "Thu", "Fri")) {
     post_tweet_of_type <- post_tweet_library(
       tweet_data = tweet_library,
