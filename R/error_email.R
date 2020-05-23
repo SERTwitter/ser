@@ -49,7 +49,7 @@ build_error_html <- function(.error) {
 #' @export
 #'
 #' @rdname errors
-email_on_error <- function(.e, recipient = email_to()) {
+email_on_error <- function(.e, recipient = email_to(), .msg = NULL) {
   authorize_gmailr()
 
   email_msg <- build_error_html(.e)
@@ -57,20 +57,20 @@ email_on_error <- function(.e, recipient = email_to()) {
   gmailr::mime() %>%
     gmailr::to(recipient) %>%
     gmailr::from("ser.twitteracct@gmail.com") %>%
-    gmailr::subject(paste("Error in SER code:", Sys.time())) %>%
+    gmailr::subject(paste("Error in SER code:", Sys.time(), .msg)) %>%
     gmailr::html_body(email_msg) %>%
     gmailr::send_message()
 
-  invisible(email_msg)
+  .e
 }
 
 #' @export
 #' @rdname errors
-action_safely <- function(.f) {
+action_safely <- function(.f, .msg = NULL) {
   function(...) {
     tryCatch(
       .f(...),
-      error = email_on_error
+      error = purrr::partial(email_on_error, .msg = .msg)
     )
   }
 }
