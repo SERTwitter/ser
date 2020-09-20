@@ -1,6 +1,20 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- badges: start -->
+
+[![Deploy SER script:
+`auto_meeting_tweet.R`](https://github.com/SERTwitter/ser/workflows/Deploy%20SER%20script:%20%60auto_meeting_tweet.R%60/badge.svg)](https://github.com/SERTwitter/ser/actions)
+[![Deploy SER script:
+`auto_tweet.R`](https://github.com/SERTwitter/ser/workflows/Deploy%20SER%20script:%20%60auto_tweet.R%60/badge.svg)](https://github.com/SERTwitter/ser/actions)
+[![Deploy SER script:
+`collect_twitter_data.R`](https://github.com/SERTwitter/ser/workflows/Deploy%20SER%20script:%20%60collect_twitter_data.R%60/badge.svg)](https://github.com/SERTwitter/ser/actions)
+[![Deploy SER script:
+`deploy_dashboard.R`](https://github.com/SERTwitter/ser/workflows/Deploy%20SER%20script:%20%60deploy_dashboard.R%60/badge.svg)](https://github.com/SERTwitter/ser/actions)
+[![Deploy SER script:
+`email_summary.R`](https://github.com/SERTwitter/ser/workflows/Deploy%20SER%20script:%20%60email_summary.R%60/badge.svg)](https://github.com/SERTwitter/ser/actions)
+<!-- badges: end -->
+
 # ser
 
 The goal of ser is to automate parts of the SER Communications Committee
