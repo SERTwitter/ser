@@ -1,6 +1,6 @@
 #' Prepare a repository to deploy an SER script on GitHub Actions
 #'
-#' Use this function after setting up a repository to run the script in. Add
+#' Use this function inside of the {ser} repository. Add any additional
 #' environmental variables under Settings > secrets in the GitHub UI for the
 #' repository.
 #'
@@ -29,14 +29,14 @@ deploy_ghactions <- function(script_name, cron = "30 16 * * *") {
     )
   )
 
-  usethis::ui_info("Setting cron job to {cron}. Change the `cron` argument in {usethis::ui_field('.github/workflows/main.yml')} to run at a different time.")
-  usethis::ui_todo("Add the following secrets to the deployment GitHub repository: \\
+  usethis::ui_info("Setting cron job to {cron}. Change the `cron` argument in {usethis::ui_field(yml_file(script_name))} to run at a different time.")
+  usethis::ui_todo("Using the following secrets in the GitHub repository: \\
                    {usethis::ui_code('DRIVE_AUTH_TOKEN_PATH')},  \\
                    {usethis::ui_code('GMAILR_APP')},  \\
                    {usethis::ui_code('SER_ACCESS_SECRET')},  \\
                    {usethis::ui_code('SER_ACCESS_TOKEN')},  \\
                    {usethis::ui_code('SER_CONSUMER_SECRET')}")
-  usethis::ui_todo("Commit and push changes to the deployment GitHub repository")
+  usethis::ui_todo("Commit and push changes to the  GitHub repository")
 }
 
 yml_file <- function(script_name) {
