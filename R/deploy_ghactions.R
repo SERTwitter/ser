@@ -18,6 +18,7 @@ deploy_ghactions <- function(script_name, cron = "30 16 * * *") {
     save_as = yml_file(script_name),
     package = "ser",
     data = list(
+      name = workflow_name(script_name),
       script_name = script_name,
       cron = cron,
       DRIVE_AUTH_TOKEN_PATH = "${{ secrets.DRIVE_AUTH_TOKEN_PATH }}",
@@ -39,7 +40,12 @@ deploy_ghactions <- function(script_name, cron = "30 16 * * *") {
                    {usethis::ui_code('SER_ACCESS_SECRET')},  \\
                    {usethis::ui_code('SER_ACCESS_TOKEN')},  \\
                    {usethis::ui_code('SER_CONSUMER_SECRET')}")
+  usethis::use_github_actions_badge(workflow_name(script_name))
   usethis::ui_todo("Commit and push changes to the  GitHub repository")
+}
+
+workflow_name <- function(script_name) {
+  glue::glue("Deploy SER script: `{script_name}.R`")
 }
 
 yml_file <- function(script_name) {
