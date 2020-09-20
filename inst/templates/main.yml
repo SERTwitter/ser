@@ -1,4 +1,4 @@
-name: 'Deploy SER script: `{{{script_name}}}.R`'
+name: '{{{name}}}'
 'on':
   schedule:
     - cron:  '{{{cron}}}'
@@ -22,7 +22,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Cache R packages
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: {{{cache_path}}}
           key: {{{cache_key}}}
