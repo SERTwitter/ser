@@ -24,9 +24,9 @@ jobs:
       - name: Cache R packages
         uses: actions/cache@v1
         with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ hashFiles('.github/R-version') }}-1-
+          path: {{{cache_path}}}
+          key: {{{cache_key}}}
+          restore-keys: {{{cache_restore}}}
 
       - name: Install Package Dependencies
         run: |-

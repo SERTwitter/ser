@@ -25,7 +25,10 @@ deploy_ghactions <- function(script_name, cron = "30 16 * * *") {
       SER_ACCESS_SECRET = "${{ secrets.SER_ACCESS_SECRET }}",
       SER_ACCESS_TOKEN = "${{ secrets.SER_ACCESS_TOKEN }}",
       SER_CONSUMER_KEY = "${{ secrets.SER_CONSUMER_KEY }}",
-      SER_CONSUMER_SECRET = "${{ secrets.SER_CONSUMER_SECRET }}"
+      SER_CONSUMER_SECRET = "${{ secrets.SER_CONSUMER_SECRET }}",
+      cache_path = "${{ env.R_LIBS_USER }}",
+      cache_key = "${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}",
+      cache_restore = "${{ hashFiles('.github/R-version') }}-1-"
     )
   )
 
