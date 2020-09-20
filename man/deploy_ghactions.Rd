@@ -13,7 +13,7 @@ deploy_ghactions(script_name, cron = "30 16 * * *")
 \item{cron}{A cron job specification in include in the GitHub Action script}
 }
 \description{
-Use this function after setting up a repository to run the script in. Add
+Use this function inside of the {ser} repository. Add any additional
 environmental variables under Settings > secrets in the GitHub UI for the
 repository.
 }

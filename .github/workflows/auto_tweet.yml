@@ -1,7 +1,7 @@
-name: 'Deploy SER script: `{{{script_name}}}.R`'
+name: 'Deploy SER script: `auto_tweet.R`'
 'on':
   schedule:
-    - cron:  '{{{cron}}}'
+    - cron:  '30 16 * * *'
 
 jobs:
   build:
@@ -24,9 +24,9 @@ jobs:
       - name: Cache R packages
         uses: actions/cache@v1
         with:
-          path: {{{cache_path}}}
-          key: {{{cache_key}}}
-          restore-keys: {{{cache_restore}}}
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ hashFiles('.github/R-version') }}-1-
 
       - name: Install Package Dependencies
         run: |-
@@ -38,15 +38,15 @@ jobs:
       - name: Install package
         run: R CMD INSTALL .
 
-      - name: 'Deploy script: `{{{script_name}}}.R`'
+      - name: 'Deploy script: `auto_tweet.R`'
         env:
-          DRIVE_AUTH_TOKEN_PATH: {{{DRIVE_AUTH_TOKEN_PATH}}}
-          GMAILR_APP: {{GMAILR_APP}}
-          SER_ACCESS_SECRET: {{{SER_ACCESS_SECRET}}}
-          SER_ACCESS_TOKEN: {{{SER_ACCESS_TOKEN}}}
-          SER_CONSUMER_KEY: {{{SER_CONSUMER_KEY}}}
-          SER_CONSUMER_SECRET: {{{SER_CONSUMER_SECRET}}}
+          DRIVE_AUTH_TOKEN_PATH: ${{ secrets.DRIVE_AUTH_TOKEN_PATH }}
+          GMAILR_APP: ${{ secrets.GMAILR_APP }}
+          SER_ACCESS_SECRET: ${{ secrets.SER_ACCESS_SECRET }}
+          SER_ACCESS_TOKEN: ${{ secrets.SER_ACCESS_TOKEN }}
+          SER_CONSUMER_KEY: ${{ secrets.SER_CONSUMER_KEY }}
+          SER_CONSUMER_SECRET: ${{ secrets.SER_CONSUMER_SECRET }}
         run: |-
           library(ser)
-          source_ser('{{{script_name}}}')
+          source_ser('auto_tweet')
         shell: Rscript {0}
