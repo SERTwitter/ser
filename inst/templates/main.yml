@@ -5,14 +5,39 @@ name: 'Deploy SER script: `{{{script_name}}}.R`'
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: macOS-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@master
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v1
+
+      - name: Query dependencies
+        run: |
+          options(repos = 'https://packagemanager.rstudio.com/all/latest')
+          install.packages('remotes')
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ hashFiles('.github/R-version') }}-1-
+
       - name: Install Package Dependencies
         run: |-
-          Rscript -e "install.packages('remotes', repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
-          Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+          options(repos = 'https://packagemanager.rstudio.com/all/latest')
+          install.packages('remotes')
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+
+      - name: Install package
+        run: R CMD INSTALL .
+
       - name: 'Deploy script: `{{{script_name}}}.R`'
         env:
           DRIVE_AUTH_TOKEN_PATH: {{{DRIVE_AUTH_TOKEN_PATH}}}
@@ -22,5 +47,6 @@ jobs:
           SER_CONSUMER_KEY: {{{SER_CONSUMER_KEY}}}
           SER_CONSUMER_SECRET: {{{SER_CONSUMER_SECRET}}}
         run: |-
-          Rscript -e "library(ser); source_ser('{{{script_name}}}')"
-    container: rocker/verse:latest
+          library(ser)
+          source_ser('{{{script_name}}}')
+        shell: Rscript {0}

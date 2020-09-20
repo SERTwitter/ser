@@ -12,12 +12,10 @@
 deploy_ghactions <- function(script_name, cron = "30 16 * * *") {
   if (!script_name %in% scripts_ls()) stop("script not found. Please add it to the ser package in `inst/scripts`.", call. = FALSE)
 
-  usethis::use_template("DESCRIPTION", package = "ser", data = list(script_name = script_name))
-
   if (!fs::dir_exists(".github/workflows/")) fs::dir_create(".github/workflows/")
   usethis::use_template(
     "main.yml",
-    save_as = ".github/workflows/main.yml",
+    save_as = yml_file(script_name),
     package = "ser",
     data = list(
       script_name = script_name,
@@ -39,4 +37,12 @@ deploy_ghactions <- function(script_name, cron = "30 16 * * *") {
                    {usethis::ui_code('SER_ACCESS_TOKEN')},  \\
                    {usethis::ui_code('SER_CONSUMER_SECRET')}")
   usethis::ui_todo("Commit and push changes to the deployment GitHub repository")
+}
+
+yml_file <- function(script_name) {
+  glue::glue(".github/workflows/{base_file_name(script_name)}.yml")
+}
+
+base_file_name <- function(x) {
+  fs::path_ext_remove(fs::path_file(x))
 }
