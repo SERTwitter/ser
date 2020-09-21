@@ -39,7 +39,7 @@ jobs:
 
       - name: Install package
         run: |-
-          remotes::install_github("SERTwitter/ser", dependencies = FALSE, upgrade = FALSSE)
+          remotes::install_github("SERTwitter/ser", dependencies = FALSE, upgrade = FALSE)
         shell: Rscript {0}
 
       - name: 'Deploy script: `deploy_dashboard.R`'
