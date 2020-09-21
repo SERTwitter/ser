@@ -1,5 +1,7 @@
 name: 'Deploy SER script: `deploy_dashboard.R`'
 'on':
+  push:
+    branch: master
   schedule:
     - cron:  '0 10 * * *'
 
@@ -36,7 +38,9 @@ jobs:
         shell: Rscript {0}
 
       - name: Install package
-        run: R CMD INSTALL .
+        run: |-
+          remotes::install_github("SERTwitter/ser", dependencies = FALSE, upgrade = FALSSE)
+        shell: Rscript {0}
 
       - name: 'Deploy script: `deploy_dashboard.R`'
         env:
