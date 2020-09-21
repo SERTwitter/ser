@@ -1,5 +1,7 @@
 name: 'Deploy SER script: `deploy_dashboard.R`'
 'on':
+  push:
+    branch: master
   schedule:
     - cron:  '0 10 * * *'
 
@@ -46,6 +48,8 @@ jobs:
           SER_ACCESS_TOKEN: ${{ secrets.SER_ACCESS_TOKEN }}
           SER_CONSUMER_KEY: ${{ secrets.SER_CONSUMER_KEY }}
           SER_CONSUMER_SECRET: ${{ secrets.SER_CONSUMER_SECRET }}
+          SER_SHINYAPPS_TOKEN: ${{ secrets.SER_SHINYAPPS_TOKEN }}
+          SER_SHINYAPPS_SECRET: ${{ secrets.SER_SHINYAPPS_SECRET }}
         run: |-
           library(ser)
           source_ser('deploy_dashboard')
