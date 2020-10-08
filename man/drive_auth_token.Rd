@@ -3,12 +3,15 @@
 \name{drive_auth_token}
 \alias{drive_auth_token}
 \alias{ser_token}
+\alias{sandbox_token}
 \alias{rsconnect_auth}
 \title{Get tokens for SER functionality}
 \usage{
 drive_auth_token()
 
 ser_token()
+
+sandbox_token()
 
 rsconnect_auth()
 }
