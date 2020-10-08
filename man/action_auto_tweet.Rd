@@ -6,7 +6,8 @@
 \usage{
 action_auto_tweet(
   twitter_token = ser_token,
-  google_drive_auth = drive_auth_token()
+  google_drive_auth = drive_auth_token(),
+  todays_date = get_day()
 )
 }
 \arguments{
