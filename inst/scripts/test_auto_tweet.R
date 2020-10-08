@@ -1,3 +1,4 @@
+
 library(ser)
 # if deauthorized on google drive:
 # googledrive::drive_auth(use_oob = TRUE)
@@ -15,7 +16,8 @@ is_tweet_length <- function(.x, n = 280) {
   }
   !(nchar(.x) <= n)   # here's the fix
 }
-#  ------------------------------------- -----------------------------------
+
+#  -------------------------------------------------------------------------
 
 assignInNamespace("is_tweet_length", is_tweet_length, ns = "rtweet")
 

@@ -125,11 +125,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
 
   # check date and choose tweet type
   if (todays_date %in% c("Mon", "Tue", "Wed", "Thu", "Fri")) {
-    post_tweet_of_type <- post_tweet_library(
-      tweet_data = tweet_library,
-      past_tweets = tweet_hist_ids,
-      twitter_token = twitter_token
-    )
+    post_tweet_of_type <- post_tweet_library
   } else {
     post_tweet_of_type <- blackout_tweet
   }
@@ -160,7 +156,11 @@ action_auto_tweet <- function(twitter_token = ser_token,
   if (retweet_day) {
     retweet_queue <- post_tweet_of_type(retweet_queue)
   } else {
-    tweet_library_status <- post_tweet_of_type
+    tweet_library_status <- post_tweet_of_type(
+      tweet_data = tweet_library,
+      past_tweets = tweet_hist_ids,
+      twitter_token = twitter_token
+    )
   }
 
   if (tweet_library_status$restart_history) {
