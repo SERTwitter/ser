@@ -23,6 +23,37 @@ get_ny_tz <- function() {
   ifelse(get_os() == "mac", "America/New_york", "America/New_York")
 }
 
+#' Retrieve Email for Active Content Lead
+#'
+#' `get_content_lead()` retrieves the email of teh currently assigned content
+#' lead. The function retrieves a list of content leads and their assignment
+#' dates, checks these against the current date, and returns a character string
+#' containing an email address.
+#' @param google_drive_auth Authorization token for the SER Google Drive account.
+#' @export
+get_content_lead <- function(google_drive_auth = drive_auth_token()) {
+  require(lubridate)
+  googledrive::drive_auth(path = google_drive_auth)
+
+  content_lead_id <- googledrive::drive_find(
+    pattern = "content_leads",
+    type = "spreadsheet"
+    ) %>%
+    dplyr::pull(id) %>%
+    googledrive::as_id()
+  googledrive::drive_download(content_lead_id, type = "csv", overwrite = TRUE)
+  content_leads <- readr::read_csv("content_leads.csv")
+
+  lead_email <- content_leads %>%
+    dplyr::mutate(
+      current_lead = today() %within% interval(mdy(start_date), mdy(end_date))
+    ) %>%
+    dplyr::filter(current_lead) %>%
+    dplyr::pull(email)
+
+  lead_email
+}
+
 #' Email Daily Summary of SER Tweets
 #'
 #' `action_email_summary()` handles daily summaries of tweets made on the SER
