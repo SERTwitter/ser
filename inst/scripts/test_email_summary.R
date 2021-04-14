@@ -7,7 +7,7 @@ library(ser)
 
 
 on_error_email_to(gmail("malcolmbarrett"))
-safe_action_email_summary <- action_safely(action_email_summary)
+safe_action_email_summary <- action_safely(action_email_summary, "(test_email_summary.R)")
 send_summary_to <-gmail("malcolmbarrett")
 
 safe_action_email_summary(recipients = send_summary_to)

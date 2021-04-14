@@ -8,3 +8,4 @@ inst/shiny_apps/tweet_dashboard/data/
 .secret
 .secret.zip
 .DS_Store
+client_secret.json

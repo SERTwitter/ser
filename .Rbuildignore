@@ -3,3 +3,4 @@
 ^ser\.Rproj$
 ^\.Rproj\.user$
 ^\.secret$
+^client_secret\.json$
