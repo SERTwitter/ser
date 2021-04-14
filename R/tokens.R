@@ -37,8 +37,8 @@ sandbox_token <- function() {
 #' @rdname drive_auth_token
 rsconnect_auth <- function() {
   rsconnect::setAccountInfo(
-    name = 'societyforepi',
-    token = Sys.getenv('SER_SHINYAPPS_TOKEN'),
-    secret = Sys.getenv('SER_SHINYAPPS_SECRET')
+    name = "societyforepi",
+    token = Sys.getenv("SER_SHINYAPPS_TOKEN"),
+    secret = Sys.getenv("SER_SHINYAPPS_SECRET")
   )
 }

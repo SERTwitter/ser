@@ -2,10 +2,11 @@
 post_tweet_library <- function(tweet_data = tweet_library,
                                past_tweets = tweet_hist_ids,
                                twitter_token = ser_token) {
-
   tweet_data <- tweet_data %>%
-    dplyr::mutate(id_transform =
-        stringr::str_remove_all(Timestamp, pattern = "\\s|:|/"))
+    dplyr::mutate(
+      id_transform =
+        stringr::str_remove_all(Timestamp, pattern = "\\s|:|/")
+    )
 
   id_check <- tweet_data %>%
     dplyr::filter(!id_transform %in% past_tweets)
@@ -95,7 +96,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
   tweet_library_id <- googledrive::drive_find(
     pattern = "ser_tweet_library",
     type = "spreadsheet"
-    ) %>%
+  ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
   googledrive::drive_download(tweet_library_id, type = "csv", overwrite = TRUE)
@@ -105,7 +106,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
   tweet_hist_id <- googledrive::drive_find(
     pattern = "ser_tweet_history",
     type = "spreadsheet"
-    ) %>%
+  ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
   googledrive::drive_download(tweet_hist_id, type = "csv", overwrite = TRUE)
@@ -116,7 +117,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
   retweet_csv_id <- googledrive::drive_find(
     pattern = "retweet_queue",
     type = "spreadsheet"
-    ) %>%
+  ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
   googledrive::drive_download(retweet_csv_id, type = "csv", overwrite = TRUE)
@@ -139,7 +140,7 @@ action_auto_tweet <- function(twitter_token = ser_token,
   blackout_id <- googledrive::drive_find(
     pattern = "tweet_blackout",
     type = "spreadsheet"
-    ) %>%
+  ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
 
