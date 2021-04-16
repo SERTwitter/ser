@@ -20,9 +20,9 @@ gmail_secret()
 
 gmail_email()
 
-email_on_error(.e, recipient = email_to())
+email_on_error(.e, recipient = email_to(), .msg = NULL)
 
-action_safely(.f)
+action_safely(.f, .msg = NULL)
 }
 \arguments{
 \item{recipient}{an email address.}
