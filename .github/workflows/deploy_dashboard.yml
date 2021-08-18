@@ -45,10 +45,11 @@ jobs:
 
           remotes::install_github("SERTwitter/ser", dependencies = FALSE, upgrade = FALSE)
         shell: Rscript {0}
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Deploy script: `deploy_dashboard.R`'
         env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
           DRIVE_AUTH_TOKEN_PATH: ${{ secrets.DRIVE_AUTH_TOKEN_PATH }}
           GMAILR_APP: ${{ secrets.GMAILR_APP }}
           SER_ACCESS_SECRET: ${{ secrets.SER_ACCESS_SECRET }}
