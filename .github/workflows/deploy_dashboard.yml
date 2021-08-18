@@ -1,5 +1,7 @@
 name: 'Deploy SER script: `deploy_dashboard.R`'
 'on':
+  push:
+    branch: master
   schedule:
     - cron:  '0 10 * * *'
 
