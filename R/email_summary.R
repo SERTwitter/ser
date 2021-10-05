@@ -47,7 +47,10 @@ get_content_lead <- function(google_drive_auth = drive_auth_token()) {
   lead_email <- content_leads %>%
     dplyr::mutate(current_lead = is_current_lead(start_date, end_date)) %>%
     dplyr::filter(current_lead) %>%
-    dplyr::pull(email)
+    dplyr::pull(email) %>%
+    stringr::str_trim()
+
+  if (lead_email == "") lead_email <- character()
 
   lead_email
 }
