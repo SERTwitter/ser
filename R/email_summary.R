@@ -50,7 +50,7 @@ get_content_lead <- function(google_drive_auth = drive_auth_token()) {
     dplyr::pull(email) %>%
     stringr::str_trim()
 
-  if (lead_email == "") lead_email <- character()
+  if (isTRUE(lead_email == "" | is.na(lead_email))) lead_email <- character()
 
   lead_email
 }
