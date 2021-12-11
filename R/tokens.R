@@ -20,6 +20,18 @@ ser_token <- function() {
   )
 }
 
+#' @export
+#' @rdname drive_auth_token
+sandbox_token <- function() {
+  rtweet::create_token(
+    "twitter_sandbox_test",
+    consumer_key = Sys.getenv("SANDBOX_CONSUMER_KEY"),
+    consumer_secret = Sys.getenv("SANDBOX_CONSUMER_SECRET"),
+    access_token = Sys.getenv("SANDBOX_ACCESS_TOKEN"),
+    access_secret = Sys.getenv("SANDBOX_ACCESS_SECRET"),
+    set_renv = FALSE
+  )
+}
 
 #' @export
 #' @rdname drive_auth_token
