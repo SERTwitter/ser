@@ -8,7 +8,8 @@ send_summary_to <- c(
   email("mumfords", "mail.nih.gov"),
   email("Magdalena.Cerda", "nyulangone.org"),
   email("jason_gantenberg", "brown.edu"),
-  email("mkiang", "stanford.edu")
+  email("mkiang", "stanford.edu"),
+  get_content_lead()
 )
 
 safe_action_email_summary(recipients = send_summary_to)
