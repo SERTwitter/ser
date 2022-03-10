@@ -2,14 +2,21 @@
 post_tweet_library <- function(tweet_data = tweet_library,
                                past_tweets = tweet_hist_ids,
                                twitter_token = ser_token) {
+
   tweet_data <- tweet_data %>%
     dplyr::mutate(
       id_transform =
         stringr::str_remove_all(Timestamp, pattern = "\\s|:|/")
     )
 
+  allow_recurrence_ids <- tweet_data %>%
+    filter(Recurrence == "Yes") %>%
+    pull(id_transform)
+
+  omit_tweet_ids <- past_tweets[!(omit_tweet_ids %in% allow_recurrence_ids)]
+
   id_check <- tweet_data %>%
-    dplyr::filter(!id_transform %in% past_tweets)
+    dplyr::filter(!id_transform %in% omit_tweet_ids)
 
   if (nrow(id_check) == 0) {
     tweet_data <- tweet_data %>%
