@@ -30,7 +30,7 @@ post_meeting_tweet <- function(tweet_data = meeting_tweet_queue, twitter_token =
 #' @export
 #' @importFrom lubridate %within%
 action_meeting_tweet <- function(period_start = "2019-03-01", period_end = "2019-06-18",
-                              twitter_token = ser_token, google_drive_auth = "ttt.rds") {
+                                 twitter_token = ser_token, google_drive_auth = "ttt.rds") {
 
   # Don't post in outside of the 3 months before the meeting
   pre_meeting_int <- lubridate::interval(lubridate::ymd(period_start), lubridate::ymd(period_end))
