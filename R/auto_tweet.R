@@ -10,7 +10,7 @@ post_tweet_library <- function(tweet_data = tweet_library,
     )
 
   allow_recurrence_ids <- tweet_data %>%
-    dplyr::filter(Recurrence == "Yes") %>%
+    dplyr::filter(Recurring == "Yes") %>%
     dplyr::pull(id_transform)
 
   omit_tweet_ids <- past_tweets[!(omit_tweet_ids %in% allow_recurrence_ids)]
@@ -64,7 +64,7 @@ post_retweet <- function(tweet_data = retweet_queue, twitter_token = ser_token) 
   invisible(tweet_data)
 }
 
-blackout_tweet <- function(tweet_data = tweet_queue) {
+blackout_tweet <- function(tweet_data = tweet_queue, ...) {
   invisible(tweet_data)
 }
 
