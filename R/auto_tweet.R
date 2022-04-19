@@ -64,7 +64,7 @@ post_retweet <- function(tweet_data = retweet_queue, twitter_token = ser_token) 
   invisible(tweet_data)
 }
 
-blackout_tweet <- function(tweet_data = tweet_queue) {
+blackout_tweet <- function(tweet_data = tweet_queue, ...) {
   invisible(tweet_data)
 }
 
