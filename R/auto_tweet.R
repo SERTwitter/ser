@@ -28,7 +28,7 @@ post_tweet_library <- function(tweet_data = tweet_library,
     restart_history <- FALSE
   }
 
-  rtweet::post_tweet(tweet_data$Tweet, token = twitter_token())
+  rtweet::post_tweet(tweet_data$Tweet, token = twitter_token)
 
   invisible(
     list(
