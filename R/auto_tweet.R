@@ -13,7 +13,7 @@ post_tweet_library <- function(tweet_data = tweet_library,
     dplyr::filter(Recurring == "Yes") %>%
     dplyr::pull(id_transform)
 
-  omit_tweet_ids <- past_tweets[!(omit_tweet_ids %in% allow_recurrence_ids)]
+  omit_tweet_ids <- past_tweets[!(past_tweets %in% allow_recurrence_ids)]
 
   id_check <- tweet_data %>%
     dplyr::filter(!id_transform %in% omit_tweet_ids)
