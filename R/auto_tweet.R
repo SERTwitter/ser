@@ -101,13 +101,13 @@ action_auto_tweet <- function(twitter_token = ser_token,
 
   # download the existing tweet form entries from google drive
   tweet_library_id <- googledrive::drive_find(
-    pattern = "ser_tweet_library",
+    pattern = "ser_tweetform_library",
     type = "spreadsheet"
   ) %>%
     dplyr::pull(id) %>%
     googledrive::as_id()
   googledrive::drive_download(tweet_library_id, type = "csv", overwrite = TRUE)
-  tweet_library <- readr::read_csv("ser_tweet_library.csv")
+  tweet_library <- readr::read_csv("ser_tweetform_library.csv")
 
   # download tweet history
   tweet_hist_id <- googledrive::drive_find(
